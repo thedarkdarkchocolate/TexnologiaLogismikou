@@ -51,7 +51,7 @@ public class signUp extends JFrame{
       label_lastName= new JLabel("Lastname");
       label_lastName.setBounds(200,200,100,40);
       
-      label_studentNumber= new JLabel("AM");
+      label_studentNumber= new JLabel("Student Number");
       label_studentNumber.setBounds(200,250,150,40);
       
       

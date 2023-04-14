@@ -96,7 +96,7 @@ public class ClientHandler implements Runnable{
         boolean authCompleted = checkCredentials(signInPacket);
         if(authCompleted) isSignedIn = true;
         Packet<Boolean> srvAnswr = new ServerAnswer(authCompleted);
-        
+
         try {
             objOut.writeObject(srvAnswr);
             System.out.println("SERVER: Credentials auth: " + authCompleted);
