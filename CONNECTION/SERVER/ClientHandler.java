@@ -73,10 +73,12 @@ public class ClientHandler implements Runnable{
         switch(pckt.getPacketType()){
 
             case "SIGNIN":
-                signInHandler((SignInPacket)pckt);
+                if(!this.isSignedIn)
+                    signInHandler((SignInPacket)pckt);
                 break;
-            case "SIGNUP":
-                signUpHandler((SignUpPacket)pckt);
+                case "SIGNUP":
+                if(!this.isSignedIn)
+                    signUpHandler((SignUpPacket)pckt);
                 break;
             default:
                 System.out.println("REROUTE PACKET: unable to find packet type");
