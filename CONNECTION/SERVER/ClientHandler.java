@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import PACKETS.Packet;
-import PACKETS.ServerAnswer;
+import PACKETS.ServerAnswerPacket;
 import PACKETS.SignInPacket;
 import PACKETS.SignUpPacket;
 
@@ -76,7 +76,7 @@ public class ClientHandler implements Runnable{
                 if(!this.isSignedIn)
                     signInHandler((SignInPacket)pckt);
                 break;
-                case "SIGNUP":
+            case "SIGNUP":
                 if(!this.isSignedIn)
                     signUpHandler((SignUpPacket)pckt);
                 break;
@@ -95,7 +95,7 @@ public class ClientHandler implements Runnable{
             
         boolean authCompleted = checkCredentials(signInPacket);
         if(authCompleted) isSignedIn = true;
-        Packet<Boolean> srvAnswr = new ServerAnswer(authCompleted);
+        Packet<Boolean> srvAnswr = new ServerAnswerPacket(authCompleted);
 
         try {
             objOut.writeObject(srvAnswr);
@@ -120,7 +120,7 @@ public class ClientHandler implements Runnable{
         }
 
         // If userExists = true then we can't create the account
-        Packet<Boolean> srvAnswer = new ServerAnswer(!userExists);
+        Packet<Boolean> srvAnswer = new ServerAnswerPacket(!userExists);
         
 
         try {
