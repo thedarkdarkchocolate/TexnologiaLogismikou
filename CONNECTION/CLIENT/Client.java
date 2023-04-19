@@ -47,8 +47,8 @@ public class Client{
             Packet<?> cred = new SignInPacket(username, password);
             objOut.writeObject(cred);
             objOut.flush();
-            ServerAnswer srvAnswr;
-            srvAnswr = (ServerAnswer)objIn.readObject();
+            ServerAnswerPacket srvAnswr;
+            srvAnswr = (ServerAnswerPacket)objIn.readObject();
 
             if (checkServerAnswer(srvAnswr)){
                 System.out.println("User Succefuly Connected");
@@ -75,8 +75,8 @@ public class Client{
             Packet<?> cred = new SignUpPacket(username, password, email);
             objOut.writeObject(cred);
             objOut.flush();
-            ServerAnswer srvAnswer;
-            srvAnswer = (ServerAnswer)objIn.readObject();
+            ServerAnswerPacket srvAnswer;
+            srvAnswer = (ServerAnswerPacket)objIn.readObject();
 
             if(checkServerAnswer(srvAnswer)){
                 // Succefuly created new account
@@ -99,7 +99,7 @@ public class Client{
     
 
 
-    private boolean checkServerAnswer(ServerAnswer packet){
+    private boolean checkServerAnswer(ServerAnswerPacket packet){
         
         return packet.getPacketData();        
     }
