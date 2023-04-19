@@ -1,7 +1,5 @@
 package GUI;
 
-import PACKETS.App;
-
 // import java.awt.Color;
 // import java.awt.Container;
 // import java.awt.GridBagConstraints;
@@ -11,6 +9,8 @@ import java.awt.event.ActionListener;
 
 // import java.awt.Insets;
 import javax.swing.*;
+
+import CONNECTION.CLIENT.App;
 
 
 public class logInGui extends JFrame {

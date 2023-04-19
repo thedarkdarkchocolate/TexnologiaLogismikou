@@ -6,9 +6,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-import PACKETS.App;
+import CONNECTION.CLIENT.App;
 
-public class signUp extends JFrame{
+public class signUpGui extends JFrame{
 	
    App app;
 
@@ -19,7 +19,7 @@ public class signUp extends JFrame{
 	ImageIcon icon = new ImageIcon("src/ASSETS/logo-new.png");
 	Image image = icon.getImage();
 	
-	public signUp(App app){
+	public signUpGui(App app){
 		
 		this.app = app;
       this.startGui();

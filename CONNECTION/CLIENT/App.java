@@ -1,14 +1,15 @@
-package PACKETS;
+package CONNECTION.CLIENT;
 import GUI.*;
-
-import CONNECTION.CLIENT.Client;
 
 
 public class App {
     
-    Client client;
-    logInGui logIn;
-    signUp signUp;
+    private Client client;
+    private logInGui logIn;
+    private signUpGui signUp;
+    // private orderGui orderGui;
+    // private confirmOrederGui confirmOrederGui;
+
 
     public App (Client client) { 
         
@@ -17,6 +18,7 @@ public class App {
     }
 
     public void sendSignInInfo(String user, String pass){
+
         int code = client.sendSignInInfo(user, pass);
         if(code == 0){
             logIn.clearInputFields();
@@ -59,7 +61,7 @@ public class App {
     }
 
     public void startSignUpGUI(){
-        signUp = new signUp(this);
+        signUp = new signUpGui(this);
     }
 
     
