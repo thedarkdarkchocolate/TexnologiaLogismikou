@@ -13,6 +13,8 @@ public class Client{
     private Socket clSocket;
     private ObjectOutputStream objOut;
     private ObjectInputStream objIn;
+    private String client_Student_Number;
+    private boolean free_meal_provision;
     private App app;
 
 
@@ -22,6 +24,7 @@ public class Client{
         clSocket = new Socket("localhost", 5000);
         objOut = new ObjectOutputStream(clSocket.getOutputStream());
         objIn = new ObjectInputStream(clSocket.getInputStream());
+        client_Student_Number = "";
 
         this.app = new App(this);
 
@@ -40,7 +43,7 @@ public class Client{
     //0: credentials don't match a user, 1: success user logged in, 2: Unkown Error
     //int ---> return code so the app knows what kind of error came up
     public int sendSignInInfo(String username, String password){
-        System.out.println("Client: User Credentials: Usrnm: "+ username +", Pswrd: "+ password);
+        System.out.println("Client: User Credentials: Username: "+ username +", Password: "+ password);
     
         try {
                     
@@ -52,6 +55,7 @@ public class Client{
 
             if (checkServerAnswer(srvAnswr)){
                 System.out.println("User Succefuly Connected");
+                this.client_Student_Number = username;
                 return 1;
             }
             else{
@@ -68,7 +72,7 @@ public class Client{
     
 
     public int sendSignUpInfo(String username, String password, String email) {
-        System.out.println("Client: User Credentials: Usrnm: "+ username +", Pswrd: "+ password + ", E-mal: " + email);
+        System.out.println("Client: User Credentials: Username: "+ username +", Password: "+ password + ", E-mal: " + email);
 
         try {
             
@@ -96,6 +100,11 @@ public class Client{
         }
 
     }
+
+    
+    // public void sendProfileInfoRequest(){
+
+    // }
     
 
 

@@ -4,11 +4,11 @@ import java.util.HashMap;
 
 public class SignUpPacket extends Packet<HashMap<String, String>> {
 
-    private String studentNumber, password, email;
+    private String studentId, password, email;
 
-    public SignUpPacket(String studentNumber, String password, String email){
+    public SignUpPacket(String studentId, String password, String email){
         super("SIGNUP");
-        this.studentNumber = studentNumber;
+        this.studentId = studentId;
         this.password = password;
         this.email = email;
     }
@@ -17,7 +17,7 @@ public class SignUpPacket extends Packet<HashMap<String, String>> {
     public HashMap<String, String> getPacketData() {
         
         HashMap<String, String> dict = new HashMap<>();
-        dict.put("username", this.studentNumber);
+        dict.put("username", this.studentId);
         dict.put("password", this.password);
         dict.put("email", this.email);
 

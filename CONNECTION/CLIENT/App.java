@@ -1,5 +1,5 @@
 package CONNECTION.CLIENT;
-import GUI.*;
+import CONNECTION.CLIENT.CLIENTGUI.*;
 
 
 public class App {

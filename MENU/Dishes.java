@@ -1,6 +1,8 @@
-package PACKETS;
+package MENU;
 
-public class Dishes {
+import java.io.Serializable;
+
+public class Dishes implements Serializable{
     
     private String dishName;
 

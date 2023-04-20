@@ -1,4 +1,4 @@
-package SERVERGUI;
+package CONNECTION.SERVER.SERVERGUI;
 
 // ServerGui --> Emfanizei tis eiserxomenes parageleies 
 //               Uparxei input box gia eisagwgh tou pasou h studentId

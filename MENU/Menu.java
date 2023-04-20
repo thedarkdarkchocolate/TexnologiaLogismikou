@@ -1,6 +1,8 @@
-package PACKETS;
+package MENU;
 
-public class Menu {
+import java.io.Serializable;
+
+public class Menu implements Serializable{
     
     private int day;
 

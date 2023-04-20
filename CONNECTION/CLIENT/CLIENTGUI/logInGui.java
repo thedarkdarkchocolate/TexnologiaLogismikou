@@ -1,4 +1,4 @@
-package GUI;
+package CONNECTION.CLIENT.CLIENTGUI;
 
 // import java.awt.Color;
 // import java.awt.Container;
@@ -17,7 +17,7 @@ public class logInGui extends JFrame {
     
     private App app;
     private JPasswordField password;
-	private JTextField studentNumber;
+	private JTextField studentID;
 	private JLabel label_password,label_username,message, label_image;
 	private JButton signIn, signUp;
 	
@@ -49,7 +49,7 @@ public class logInGui extends JFrame {
         
         
         
-        label_username= new JLabel("Student Number");
+        label_username= new JLabel("Student ID");
         label_username.setBounds(200,150,100,40);
         
         label_password= new JLabel("Password");
@@ -58,8 +58,8 @@ public class logInGui extends JFrame {
         message= new JLabel("Don't have an account:");
         message.setBounds(200,300,250,40);
         
-        studentNumber=new JTextField();
-        studentNumber.setBounds(350,150,200,40);
+        studentID=new JTextField();
+        studentID.setBounds(350,150,200,40);
         
         password=new JPasswordField();
         password.setBounds(350,200,200,40);
@@ -73,7 +73,7 @@ public class logInGui extends JFrame {
         signUp.addActionListener(btnL);
         
         this.add(label_username);
-        this.add(studentNumber);
+        this.add(studentID);
         
         this.add(label_password);
         this.add(password);
@@ -89,11 +89,11 @@ public class logInGui extends JFrame {
     }
 
     public String[] getCredentials(){
-        return new String[] {studentNumber.getText(), new String(password.getPassword())};
+        return new String[] {studentID.getText(), new String(password.getPassword())};
     }
 
     public void clearInputFields(){
-        this.studentNumber.setText("");
+        this.studentID.setText("");
         this.password.setText("");
     }
 
@@ -110,7 +110,7 @@ public class logInGui extends JFrame {
         public void actionPerformed(ActionEvent e) {
 
             if(e.getSource().equals(signIn)){
-                String usrnm = studentNumber.getText();
+                String usrnm = studentID.getText();
                 String pass = new String(password.getPassword());
                 if(!usrnm.isEmpty() && !pass.isEmpty())
                     app.sendSignInInfo(usrnm, pass);

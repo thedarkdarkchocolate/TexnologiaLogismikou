@@ -1,8 +1,10 @@
-package GUI;
+package CONNECTION.CLIENT.CLIENTGUI;
 
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 
@@ -13,8 +15,8 @@ public class signUpGui extends JFrame{
    App app;
 
 	JPasswordField password;
-	JTextField name ,lastName, studentNumber, email;
-	JLabel label_password,label_name,label_lastName,label_studentNumber,message, label_image, label_email;
+	JTextField name ,lastName, studentId, email;
+	JLabel label_password,label_name,label_lastName,label_studentId,message, label_image, label_email;
 	JButton signUp, signIn;
 	ImageIcon icon = new ImageIcon("src/ASSETS/logo-new.png");
 	Image image = icon.getImage();
@@ -51,8 +53,8 @@ public class signUpGui extends JFrame{
       label_lastName= new JLabel("Lastname");
       label_lastName.setBounds(200,200,100,40);
       
-      label_studentNumber= new JLabel("Student Number");
-      label_studentNumber.setBounds(200,250,150,40);
+      label_studentId= new JLabel("Student Number");
+      label_studentId.setBounds(200,250,150,40);
       
       
       label_email= new JLabel("E-mail");
@@ -76,8 +78,8 @@ public class signUpGui extends JFrame{
       lastName=new JTextField();
       lastName.setBounds(350,200,200,40);
       
-      studentNumber=new JTextField();
-      studentNumber.setBounds(350,250,200,40);
+      studentId=new JTextField();
+      studentId.setBounds(350,250,200,40);
       
       
       email=new JTextField();
@@ -105,8 +107,8 @@ public class signUpGui extends JFrame{
       this.add(label_lastName);
       this.add(lastName);
       
-      this.add(label_studentNumber);
-      this.add(studentNumber);
+      this.add(label_studentId);
+      this.add(studentId);
       
       this.add(signUp);
       this.add(signIn);
@@ -125,7 +127,22 @@ public class signUpGui extends JFrame{
       this.lastName.setText("");
       this.password.setText("");
       this.email.setText("");
-      this.studentNumber.setText("");
+      this.studentId.setText("");
+   }
+
+   public boolean isEmailValid(String email){
+
+      String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}";  
+      //"^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$" check for at
+      //  least one dot in the domain name and after the dot, it consist only the letters. The top-level domain should have only two
+      //  to six letters which is also checked by this regex.
+      
+      // Here checks the pattern with the regex parameters and return true if the email is in the above rules 
+      // return Pattern.compile(regex).matcher(email).matches();
+      Pattern pattern = Pattern.compile(regex); 
+      Matcher matcher = pattern.matcher(email);
+
+      return matcher.matches();
    }
 
 
@@ -135,7 +152,7 @@ public class signUpGui extends JFrame{
       public void actionPerformed(ActionEvent e) {
 
          if(e.getSource().equals(signUp)){
-            String usrnm = studentNumber.getText();
+            String usrnm = studentId.getText();
             String mail = email.getText();
             String pass = new String(password.getPassword());
             if(!usrnm.isEmpty() && !pass.isEmpty() && !mail.isEmpty()){
@@ -143,7 +160,11 @@ public class signUpGui extends JFrame{
                   // Display Error on GUI --> password must be 5 or more characters
                   System.out.println("password must be 5 or more characters");
                   password.setText("");
-               }else
+               }
+               // Uncomment/comment the line to check for the email format 
+               // else if (!isEmailValid(mail)) {   /* TODO: Display Error on GUI --> wrong email format */ System.out.println("GsUI: Wrong email format");  }
+               else
+               //Here we sent the info to the Class app so it be send to the server and further validate the credentials 
                   app.sendSignUpInfo(usrnm, pass, mail);
             }
             else {
