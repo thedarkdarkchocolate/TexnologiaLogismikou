@@ -7,10 +7,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import USER.Profile;
+
 public class Server{
     
     private ServerSocket serverSocket;
     private static HashMap<String, String> credentialsDataBase = new HashMap<>();
+    private static HashMap<String, Profile> profilesDataBase = new HashMap<>();
     private static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     private static ArrayList<Thread> runningThreads = new ArrayList<>();
     private Thread serverCommandThread;
@@ -19,9 +22,20 @@ public class Server{
 
         //Creating Suto DataBase
         //Temp DataBase Makes Acc from dai19000 - dai19199 || pass 19000 - 19199
-        for(int i = 0; i < 200; i++)
-            credentialsDataBase.put("dai" + ((Integer)(19000 + i)).toString(), ((Integer)(19000 + i)).toString());
-
+        //Also creating Profile Database for the same accounts
+        for(int i = 0; i < 200; i++){
+            String studentId = "dai" + ((Integer)(19000 + i)).toString();
+            String pass = ((Integer)(19000 + i)).toString();
+            String email = studentId + "@uom.edu.gr";
+            String cred[] = {studentId, pass, email};
+            Profile tmp;
+            
+            if (i%5==0) tmp = new Profile(cred, true);
+            else tmp = new Profile(cred, false);
+            
+            credentialsDataBase.put(studentId, pass);
+            profilesDataBase.put(studentId, tmp);
+        }
 
         this.serverSocket = new ServerSocket(5000);                // Creating server socket
         serverCommandThread = new Thread(new ServerCommandHandler());   // New Thread to wait for commands while the server is running
@@ -61,8 +75,16 @@ public class Server{
         return credentialsDataBase.keySet().contains(name);
     }
 
-    public void registerNewAccount(String name, String pass){
-        credentialsDataBase.put(name, pass);
+    public void registerNewAccount(String cred[]){
+        // cred[]: 1 --> username, 2 --> pass, 3 --> email
+        credentialsDataBase.put(cred[0], cred[1]);
+        profilesDataBase.put(cred[0], new Profile(cred, checkForMealProvision(cred[0])));
+    }
+
+    //  TODO: create studentId to mealProvision to check if a new studentId is entitled to free meals
+    //  currently it just returns false 
+    private boolean checkForMealProvision(String string) {
+        return false;
     }
 
     public void closeServerSocket(){

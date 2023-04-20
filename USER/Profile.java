@@ -10,6 +10,7 @@ public class Profile implements Serializable{
     private String email;
     private ArrayList<Order> prevOrders;
     private boolean free_meal_provision;
+    
 
     
     // on cred[] || 0 --> studentId, 1 --> password, 2 --> e-mail, 3 --> firstName, 4 --> lastName ||

@@ -110,13 +110,18 @@ public class ClientHandler implements Runnable{
     private void signUpHandler(SignUpPacket signUpPacket){
 
         HashMap<String, String> dict = signUpPacket.getPacketData();
+
         String username = dict.get("username");
         String password = dict.get("password");
+        String email = dict.get("email");
+
+        String cred[] = {username, password, email};
         boolean userExists = checkIfUserExists(signUpPacket);
 
         if(!userExists){
             //Create Account...
-            server.registerNewAccount(username, password);
+            server.registerNewAccount(cred);
+            
         }
 
         // If userExists = true then we can't create the account
