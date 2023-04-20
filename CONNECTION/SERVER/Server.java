@@ -76,7 +76,7 @@ public class Server{
     }
 
     public void registerNewAccount(String cred[]){
-        // cred[]: 1 --> username, 2 --> pass, 3 --> email
+        // cred[]: 0 --> username, 1 --> pass, 2 --> email
         credentialsDataBase.put(cred[0], cred[1]);
         profilesDataBase.put(cred[0], new Profile(cred, checkForMealProvision(cred[0])));
     }

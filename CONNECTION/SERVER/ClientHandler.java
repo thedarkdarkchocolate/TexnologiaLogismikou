@@ -1,6 +1,5 @@
 package CONNECTION.SERVER;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
