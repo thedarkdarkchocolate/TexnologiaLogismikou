@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import MENU.Menu;
 import USER.Profile;
 
 public class Server{
@@ -14,9 +15,11 @@ public class Server{
     private ServerSocket serverSocket;
     private static HashMap<String, String> credentialsDataBase = new HashMap<>();
     private static HashMap<String, Profile> profilesDataBase = new HashMap<>();
+    private static HashMap<String, Boolean> mealProvisionDataBase = new HashMap<>();
     private static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     private static ArrayList<Thread> runningThreads = new ArrayList<>();
     private Thread serverCommandThread;
+    private Menu menu;
 
     public Server() throws IOException{
 
@@ -30,12 +33,19 @@ public class Server{
             String cred[] = {studentId, pass, email};
             Profile tmp;
             
-            if (i%5==0) tmp = new Profile(cred, true);
+            if (i%5==0 || i == 159) tmp = new Profile(cred, true);
             else tmp = new Profile(cred, false);
             
             credentialsDataBase.put(studentId, pass);
             profilesDataBase.put(studentId, tmp);
         }
+
+        //Adding studentIds to meal provision database
+        mealProvisionDataBase.put("isc19159", true);
+
+        
+
+        // TODO: Create Menu Not final place just for testing(we need live menu)
 
         this.serverSocket = new ServerSocket(5000);                // Creating server socket
         serverCommandThread = new Thread(new ServerCommandHandler());   // New Thread to wait for commands while the server is running
@@ -81,10 +91,13 @@ public class Server{
         profilesDataBase.put(cred[0], new Profile(cred, checkForMealProvision(cred[0])));
     }
 
-    //  TODO: create studentId to mealProvision to check if a new studentId is entitled to free meals
-    //  currently it just returns false 
-    private boolean checkForMealProvision(String string) {
-        return false;
+    
+    private boolean checkForMealProvision(String studentId) {
+        return mealProvisionDataBase.get(studentId);
+    }
+
+    public Profile getProfile(String studentId) {
+        return profilesDataBase.get(studentId);
     }
 
     public void closeServerSocket(){
@@ -130,5 +143,7 @@ public class Server{
 
         
     }
+
+    
     
 }

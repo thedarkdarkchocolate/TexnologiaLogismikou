@@ -8,9 +8,8 @@ public class Menu implements Serializable{
 
     public Menu(int day, int timeOfday){       
 
-
-    
     }
+
 
 
 }

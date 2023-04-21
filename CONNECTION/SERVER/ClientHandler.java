@@ -8,10 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import PACKETS.Packet;
-import PACKETS.ServerAnswerPacket;
-import PACKETS.SignInPacket;
-import PACKETS.SignUpPacket;
+import PACKETS.*;
+import USER.Profile;
 
 public class ClientHandler implements Runnable{
 
@@ -22,6 +20,7 @@ public class ClientHandler implements Runnable{
     private ObjectInputStream objIn;   
     private Server server;
     private Boolean isSignedIn;
+    private Profile clientProfile;
 
     
     public ClientHandler(Socket socket, Server server) throws ClassNotFoundException{
@@ -79,6 +78,9 @@ public class ClientHandler implements Runnable{
                 if(!this.isSignedIn)
                     signUpHandler((SignUpPacket)pckt);
                 break;
+            case "REQUEST":
+                requestHandler((RequestPacket)pckt);
+                break;
             default:
                 System.out.println("REROUTE PACKET: unable to find packet type");
                 break;
@@ -88,12 +90,57 @@ public class ClientHandler implements Runnable{
 
     }
 
+    private void requestHandler(RequestPacket reqPacket){
+
+        switch(reqPacket.getPacketData()){
+
+            case "MENU":
+                sendMenu();
+                break;
+            case "PROFILE":
+                sendProfile();
+                break;
+            default:
+                System.out.println("PROCCESS REQUEST: unable to find request type");
+
+        }
+
+    }
+
+    private void sendMenu(){
+
+        // Packet<?> menuPacket = new MenuPacket(this.server.getMenu());
+        // try {
+        //     objOut.writeObject(menu);
+        //     objOut.flush();
+        // } catch (IOException e) {
+        //     e.printStackTrace();
+        // }
+    }
+
+    private void sendProfile(){
+
+        Packet<?> profilePacket = new ProfilePacket(this.clientProfile);
+        try {
+            objOut.writeObject(profilePacket);
+            objOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
+
+    }
+
 
     private void signInHandler(SignInPacket signInPacket){
 
             
         boolean authCompleted = checkCredentials(signInPacket);
-        if(authCompleted) isSignedIn = true;
+        if(authCompleted){ 
+            
+            this.clientProfile = this.server.getProfile(signInPacket.getStudentId());
+            isSignedIn = true;
+        }
         Packet<Boolean> srvAnswr = new ServerAnswerPacket(authCompleted);
 
         try {

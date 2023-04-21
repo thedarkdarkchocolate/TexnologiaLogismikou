@@ -1,6 +1,7 @@
 package CONNECTION.CLIENT;
 import PACKETS.*;
-
+import MENU.*;
+import USER.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -54,13 +55,13 @@ public class Client{
             srvAnswr = (ServerAnswerPacket)objIn.readObject();
 
             if (checkServerAnswer(srvAnswr)){
-                System.out.println("User Succefuly Connected");
+                System.out.println("Client: User Succefuly Connected");
                 this.client_Student_Number = username;
                 return 1;
             }
             else{
                 //Throw UI Error fon incorrect credentials
-                System.out.println("Username or Password is wrong");
+                System.out.println("Client: Username or Password is wrong");
                 return 0;
             }
         } catch (IOException | ClassNotFoundException e1) {
@@ -102,10 +103,44 @@ public class Client{
     }
 
     
-    // public void sendProfileInfoRequest(){
+    public Profile requestProfile(){
 
-    // }
+        Packet<?> requestProfilePacket = new RequestPacket("PROFILE");
+        try {
+            objOut.writeObject(requestProfilePacket);
+            objOut.flush();
+            ProfilePacket profilePacket;
+            profilePacket = (ProfilePacket)objIn.readObject();
+            
+            return profilePacket.getPacketData();
+
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
     
+    public Menu requestMenu(){
+
+        return new Menu(1, 1);
+        // TODO: Uncomment whne menu class ready 
+        // Packet<?> requestMenuPacket = new RequestPacket("MENU");
+        // try {
+        //     objOut.writeObject(requestMenuPacket);
+        //     objOut.flush();
+        //     MenuPacket menuPacket;
+        //     menuPacket = (MenuPacket)objIn.readObject();
+        //     menu = menuPacket.getPacketData();
+
+        //     return 1;
+            
+        // } catch (IOException | ClassNotFoundException e) {
+        //     e.printStackTrace();
+        //     return null;
+        // }
+        
+    }
 
 
     private boolean checkServerAnswer(ServerAnswerPacket packet){

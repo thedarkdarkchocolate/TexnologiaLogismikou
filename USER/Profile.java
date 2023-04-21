@@ -21,8 +21,9 @@ public class Profile implements Serializable{
         this.email = cred[2];
         this.free_meal_provision = free_meal_provision;
         
-        
     }
+
+    public Profile(){}
     
     public String getStudentId() {
         return studentId;
@@ -42,6 +43,17 @@ public class Profile implements Serializable{
     
     public boolean isFree_meal_provision() {
         return free_meal_provision;
+    }
+
+    public void printProfileInfo(){
+
+        System.out.println("------Profile-Info------");
+        System.out.println("StudentId: "+this.studentId);
+        System.out.println("Password: "+this.password);
+        System.out.println("E-mail: "+this.email);
+        System.out.println("Free email provision: "+this.free_meal_provision);
+        System.out.println("------------------------");
+        
     }
     
 }

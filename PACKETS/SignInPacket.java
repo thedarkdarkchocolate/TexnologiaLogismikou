@@ -21,6 +21,9 @@ public class SignInPacket extends Packet<HashMap<String, String>>{
         return dict;
     }
 
+    public String getStudentId(){return this.studentId;}
+    public String getPassword(){return this.password;}
+
    
     
 }

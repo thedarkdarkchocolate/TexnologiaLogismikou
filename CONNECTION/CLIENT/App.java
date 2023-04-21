@@ -1,6 +1,8 @@
 package CONNECTION.CLIENT;
-import CONNECTION.CLIENT.CLIENTGUI.*;
 
+import CONNECTION.CLIENT.CLIENTGUI.*;
+import MENU.*;
+import USER.*;
 
 public class App {
     
@@ -28,9 +30,28 @@ public class App {
             //User Succesfuly Connected
             logIn.close();
             //Start Menu GUI
+            startMenuGui();
         }
         else if (code == 2){
             //Unkown Error
+        }
+
+    }
+
+    
+    public void startMenuGui(){
+
+        Profile profile;
+        Menu menu;
+        
+        //  requestProfile
+        profile = this.client.requestProfile();
+        //  requestMenu
+        menu = this.client.requestMenu();
+        if(profile != null && menu != null){
+
+            //  TODO: startMenuGUI(profile, menu)
+            profile.printProfileInfo();
         }
 
     }
