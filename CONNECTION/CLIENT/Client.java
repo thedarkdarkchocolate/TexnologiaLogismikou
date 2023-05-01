@@ -32,7 +32,7 @@ public class Client{
         Scanner s = new Scanner(System.in);
         while(true)
             if (s.nextLine().equals("EXIT")){
-                //  To Do : close app!!
+                //  TODO : close app!!
                 break;
             }
             

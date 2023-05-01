@@ -10,6 +10,21 @@ public class Menu implements Serializable{
 
     }
 
+    public static class Dishes implements Serializable{
+
+
+        private String dishName;
+
+        public Dishes(){ // args: title, ingridients, price
+
+        }
+
+        public String getDishName(){
+            return this.dishName;
+        }
+
+    }
+
 
 
 }

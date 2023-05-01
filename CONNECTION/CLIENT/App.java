@@ -43,7 +43,7 @@ public class App {
 
         Profile profile;
         Menu menu;
-        
+        // client.getProfileMenu(menu, profile)
         //  requestProfile
         profile = this.client.requestProfile();
         //  requestMenu
@@ -53,6 +53,8 @@ public class App {
             //  TODO: startMenuGUI(profile, menu)
             profile.printProfileInfo();
         }
+
+        // startMenuGui();
 
     }
 
