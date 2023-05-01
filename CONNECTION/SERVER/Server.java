@@ -93,7 +93,11 @@ public class Server{
 
     
     private boolean checkForMealProvision(String studentId) {
-        return mealProvisionDataBase.get(studentId);
+        try {
+            return mealProvisionDataBase.get(studentId);
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public Profile getProfile(String studentId) {
