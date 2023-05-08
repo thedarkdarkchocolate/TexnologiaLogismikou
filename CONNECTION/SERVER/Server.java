@@ -5,10 +5,14 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.PriorityQueue;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import MENU.Menu;
-import USER.Profile;
+import USER.*;
 
 public class Server{
     
@@ -18,8 +22,10 @@ public class Server{
     private static HashMap<String, Boolean> mealProvisionDataBase = new HashMap<>();
     private static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     private static ArrayList<Thread> runningThreads = new ArrayList<>();
+    private static Queue<Order> orderQ = new PriorityQueue<Order>();
+    private final static Lock queueLock = new ReentrantLock();
     private Thread serverCommandThread;
-    private Menu menu;
+    // private Menu menu;
 
     public Server() throws IOException{
 
@@ -56,7 +62,7 @@ public class Server{
         //SERVER GUI STARTING...
 
     }
-
+    
     public void startServer(){
         while(!this.serverSocket.isClosed()){    
             try {
@@ -102,6 +108,16 @@ public class Server{
 
     public Profile getProfile(String studentId) {
         return profilesDataBase.get(studentId);
+    }
+
+    public void insertOrder(Order order){
+        try {
+            queueLock.lock();
+            orderQ.add(order);
+            queueLock.unlock();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
     }
 
     public void closeServerSocket(){
