@@ -1,0 +1,19 @@
+package USER;
+
+import java.util.Arrays;
+
+public record Dish (String name, float price, int quantity, String dishCatagory) {
+
+    private final static String dishCategories [] = {"MAIN_DISH", "GARNISH", "SALAD", "DESERT", "SPECIAL_MENU"};
+
+    //  Checking if the dish category is correct and if it isn't then raises an exception
+    public Dish {
+        if(!Arrays.stream(dishCategories).anyMatch(dishCatagory::equals)){
+            throw new IllegalArgumentException("Invalid Dish Catagory");
+        }
+    }
+
+    public float getTotalPrice(){
+        return price * (float)quantity;
+    }
+}

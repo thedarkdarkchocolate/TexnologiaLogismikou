@@ -31,22 +31,25 @@ public class Menu implements Serializable{
     public void insertBreakfastDish(String category, String dish){
 
         if (Arrays.stream(dishCategories).anyMatch(category::equals)){
+            // Here from the dictionary we getting the ArrayList that is in the dict and adding the dish
             this.breakfastMenu.get(category).add(dish);
         }
-
+        
     }
-
+    
     public void insertLaunchDish(String category, String dish){
-
+        
         if (Arrays.stream(dishCategories).anyMatch(category::equals)){
+            // Here from the dictionary we getting the ArrayList that is in the dict and adding the dish
             this.launchMenu.get(category).add(dish);
         }
-
+        
     }
-
+    
     public void insertDinnerDish(String category, String dish){
-
+        
         if (Arrays.stream(dishCategories).anyMatch(category::equals)){
+            // Here from the dictionary we getting the ArrayList that is in the dict and adding the dish
             this.dinnerMenu.get(category).add(dish);
         }
 
@@ -56,15 +59,15 @@ public class Menu implements Serializable{
         return dishCategories;
     }
 
-    public HashMap<String, ArrayList<String>> getbreakfastMenu(){
+    public HashMap<String, ArrayList<String>> getBreakfastMenu(){
         return breakfastMenu;
     }
 
-    public HashMap<String, ArrayList<String>> getlaunchMenu(){
+    public HashMap<String, ArrayList<String>> getLaunchMenu(){
         return launchMenu;
     }
 
-    public HashMap<String, ArrayList<String>> getdinnerMenu(){
+    public HashMap<String, ArrayList<String>> getDinnerMenu(){
         return dinnerMenu;
     }
 
@@ -87,7 +90,8 @@ public class Menu implements Serializable{
                 System.out.println("-------------LAUNCH-------------");
                 System.out.println();
                 for(String dishCatgory: dishCategories){
-                    System.out.println("       -------" + dishCatgory + "-------");                    for(String dish: launchMenu.get(dishCatgory)){
+                    System.out.println("       -------" + dishCatgory + "-------");
+                    for(String dish: launchMenu.get(dishCatgory)){
                         System.out.println("           " + dish);   
                     }
                 }
@@ -97,12 +101,14 @@ public class Menu implements Serializable{
                 System.out.println("-------------DINNER-------------");
                 System.out.println();
                 for(String dishCatgory: dishCategories){
-                    System.out.println("       -------" + dishCatgory + "-------");                    for(String dish: dinnerMenu.get(dishCatgory)){
+                    System.out.println("       -------" + dishCatgory + "-------");
+                    for(String dish: dinnerMenu.get(dishCatgory)){
                         System.out.println("           " + dish);   
                     }
                 }
                 System.out.println();
                 break;
+
             default:
                 break;
         }
