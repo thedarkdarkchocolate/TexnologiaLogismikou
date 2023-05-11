@@ -23,7 +23,6 @@ public class Profile implements Serializable{
         
     }
 
-    public Profile(){}
     
     public String getStudentId() {
         return studentId;
