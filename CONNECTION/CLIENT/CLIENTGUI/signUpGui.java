@@ -12,14 +12,13 @@ import CONNECTION.CLIENT.App;
 
 public class signUpGui extends JFrame{
 	
-   App app;
-
-	JPasswordField password;
-	JTextField name ,lastName, studentId, email;
-	JLabel label_password,label_name,label_lastName,label_studentId,message, label_image, label_email;
-	JButton signUp, signIn;
-	ImageIcon icon = new ImageIcon("src/ASSETS/logo-new.png");
-	Image image = icon.getImage();
+   private App app;
+	private JPasswordField password;
+	private JTextField name ,lastName, studentId, email;
+	private JLabel label_password,label_name,label_lastName,label_studentId, label_email;
+	private JButton signUp, signIn;
+	private ImageIcon icon = new ImageIcon("src/ASSETS/logo-new.png");
+	private Image image = icon.getImage();
 	
 	public signUpGui(App app){
 		

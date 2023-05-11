@@ -9,8 +9,7 @@ public class App {
     private Client client;
     private logInGui logIn;
     private signUpGui signUp;
-    // private orderGui orderGui;
-    // private confirmOrederGui confirmOrederGui;
+    // private mainGui mainFrame
 
 
     public App (Client client) { 
@@ -30,7 +29,7 @@ public class App {
             //User Succesfuly Connected
             logIn.close();
             //Start Menu GUI
-            startMenuGui();
+            startMainGui();
         }
         else if (code == 2){
             //Unkown Error
@@ -39,19 +38,20 @@ public class App {
     }
 
     
-    public void startMenuGui(){
+    public void startMainGui(){
 
         Profile profile;
         Menu menu;
-        // client.getProfileMenu(menu, profile)
         //  requestProfile
         profile = this.client.requestProfile();
         //  requestMenu
         menu = this.client.requestMenu();
         if(profile != null && menu != null){
 
-            //  TODO: startMenuGUI(profile, menu)
+            //  TODO: startMenuGUI
+            //  mainGui
             profile.printProfileInfo();
+            menu.printWholeDayMenu();
         }
 
         // startMenuGui();

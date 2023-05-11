@@ -123,22 +123,22 @@ public class Client{
     
     public Menu requestMenu(){
 
-        return new Menu(1, 1);
-        // TODO: Uncomment whne menu class ready 
-        // Packet<?> requestMenuPacket = new RequestPacket("MENU");
-        // try {
-        //     objOut.writeObject(requestMenuPacket);
-        //     objOut.flush();
-        //     MenuPacket menuPacket;
-        //     menuPacket = (MenuPacket)objIn.readObject();
-        //     menu = menuPacket.getPacketData();
+        
+        Packet<?> requestMenuPacket = new RequestPacket("MENU");
+        
+        try {
 
-        //     return 1;
+            objOut.writeObject(requestMenuPacket);
+            objOut.flush();
+            MenuPacket menuPacket;
+            menuPacket = (MenuPacket)objIn.readObject();
+           
+            return menuPacket.getPacketData();
             
-        // } catch (IOException | ClassNotFoundException e) {
-        //     e.printStackTrace();
-        //     return null;
-        // }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
         
     }
 

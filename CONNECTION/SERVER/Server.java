@@ -1,15 +1,20 @@
 package CONNECTION.SERVER;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
 
 import MENU.Menu;
 import USER.*;
@@ -25,7 +30,23 @@ public class Server{
     private static Queue<Order> orderQ = new PriorityQueue<Order>();
     private final static Lock queueLock = new ReentrantLock();
     private Thread serverCommandThread;
-    // private Menu menu;
+    private Menu menu;
+
+    // public static void main(String args[]){
+
+    //     new Server("");
+        
+    // }
+
+    
+    //TEMPORARY CONSTACTOR
+    // public Server(String k){
+    //     int day = 1;
+    //     menuReader(Integer.toString(day));
+    //     this.menu.printMenuByTimeOfService(2);
+    // }
+
+
 
     public Server() throws IOException{
 
@@ -52,6 +73,11 @@ public class Server{
         
 
         // TODO: Create Menu Not final place just for testing(we need live menu)
+        //  get current day and read the correct menu
+        menuReader("1");
+
+        //SERVER GUI STARTING...
+
 
         this.serverSocket = new ServerSocket(5000);                // Creating server socket
         serverCommandThread = new Thread(new ServerCommandHandler());   // New Thread to wait for commands while the server is running
@@ -59,9 +85,10 @@ public class Server{
         this.startServer();
 
 
-        //SERVER GUI STARTING...
+
 
     }
+
     
     public void startServer(){
         while(!this.serverSocket.isClosed()){    
@@ -110,6 +137,10 @@ public class Server{
         return profilesDataBase.get(studentId);
     }
 
+    public Menu getMenu(){
+        return this.menu;
+    }
+
     public void insertOrder(Order order){
         try {
             queueLock.lock();
@@ -118,6 +149,78 @@ public class Server{
         } catch (Exception e) {
             // TODO: handle exception
         }
+    }
+
+    //  Txt menu files day: String day --> 1 - 5    (Monday-Friday)
+    //  Txt menu file format: The first line should always start with BREAKFAST
+    //  BREAKFAST declares that the following menu is for the breakfast, a service should always start and end with the same word
+    //  BREAKFAST menu ends when there is another BREAKFAST in a line, after that there should always be LAUNCH service and after that DINNER
+    //  The char "-" when is present in a line the line will always be skipped, so it's used so is easier to read the menu.txt
+    //  The dish catagories don't need to follow an exact order place your dish catagory and in the next line write the dish
+    private void menuReader(String day){
+
+        try {
+            BufferedReader br = new BufferedReader(new FileReader("src/CONNECTION/SERVER/MENU_TXT/" + day + "_Menu.txt"));
+            String line = br.readLine();
+            String [] services = {"BREAKFAST", "LAUNCH", "DINNER"};
+
+            if(line != null && line.equals("BREAKFAST")) {
+                String currService = line;
+                Menu tmpMenu = new Menu();
+                String category = "";
+                String [] dishCategories = Menu.getDishCategories();
+
+
+                for(String ser: services){
+
+                    while(currService.equals(ser)){
+                        
+                        line = br.readLine();
+
+                        if(Arrays.stream(dishCategories).anyMatch(line::equals)){
+                            category = line;
+                        }
+                        else if (line.equals(ser))
+                            currService = "";
+                        else if (line.contains("-"))
+                            continue;
+                        else {
+                            switch(ser){
+                                case "BREAKFAST":
+                                    tmpMenu.insertBreakfastDish(category, line);
+                                    break;
+                                case "LAUNCH":
+                                    tmpMenu.insertLaunchDish(category, line);
+                                    break;
+                                case "DINNER":
+                                    tmpMenu.insertDinnerDish(category, line);
+                                    break;
+                                default:
+                                    System.out.println("SERVER: menuReader switch hit's default");
+                                    break;
+                            }
+                        }
+                    }
+
+                    line = br.readLine();
+                    currService = line;
+                }
+
+                this.menu = tmpMenu;
+
+            }
+            else {  
+                br.close();
+                throw new Exception("txt file is NULL", null);
+            }
+
+            br.close();
+
+        }catch(Exception e){
+            
+            e.printStackTrace();
+        }        
+
     }
 
     public void closeServerSocket(){

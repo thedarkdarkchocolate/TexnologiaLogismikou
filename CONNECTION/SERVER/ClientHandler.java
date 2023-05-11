@@ -109,13 +109,13 @@ public class ClientHandler implements Runnable{
 
     private void sendMenu(){
 
-        // Packet<?> menuPacket = new MenuPacket(this.server.getMenu());
-        // try {
-        //     objOut.writeObject(menu);
-        //     objOut.flush();
-        // } catch (IOException e) {
-        //     e.printStackTrace();
-        // }
+        Packet<?> menuPacket = new MenuPacket(this.server.getMenu());
+        try {
+            objOut.writeObject(menuPacket);
+            objOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void sendProfile(){
