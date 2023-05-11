@@ -1,7 +1,6 @@
 package CONNECTION.SERVER;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -49,6 +48,7 @@ public class Server{
 
 
     public Server() throws IOException{
+
 
         //Creating Suto DataBase
         //Temp DataBase Makes Acc from dai19000 - dai19199 || pass 19000 - 19199
