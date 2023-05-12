@@ -11,8 +11,18 @@ public class DatabaseHandler {
     //  main used for easier testing 
     public static void main(String args[]){
 
-        DatabaseHandler db = new DatabaseHandler();
-        db.closeDB();
+        // DatabaseHandler db = new DatabaseHandler();
+        // db.closeDB();
+
+        String time = java.time.LocalTime.now().toString();
+        System.out.println(time);
+
+        // for(char c: time){
+
+        // }
+
+        System.out.println();
+
     }
 
 

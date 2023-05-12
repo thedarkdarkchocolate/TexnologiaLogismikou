@@ -6,7 +6,7 @@ public class OrderPacket extends Packet<Order>{
     
     private Order order;
     
-    public OrderPacket(Order order){ // args: students_id, dishes...
+    public OrderPacket(Order order){
         super("CLIENT_ORDER");
         this.order = order;
 
