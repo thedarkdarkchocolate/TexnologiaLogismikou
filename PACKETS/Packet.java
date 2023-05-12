@@ -7,7 +7,7 @@ public abstract class Packet<T extends Serializable> implements Serializable {
     
     private String packetType;
     private final static String[] validTypes = new String[]{"SIGNIN", "SIGNUP", "SERVER_ANSWER", 
-                                                            "CLIENT_ORDER", "PROFILE", "MENU", "REQUEST"};
+                                                            "ORDER", "PROFILE", "MENU", "REQUEST"};
 
     public Packet(String type){
         

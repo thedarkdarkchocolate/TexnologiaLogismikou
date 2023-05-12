@@ -9,7 +9,7 @@ public class App {
     private Client client;
     private logInGui logIn;
     private signUpGui signUp;
-    // private mainGui mainFrame
+    private mainGui mainFrame;
 
 
     public App (Client client) { 
@@ -52,9 +52,9 @@ public class App {
             //  mainGui
             profile.printProfileInfo();
             menu.printWholeDayMenu();
+            this.mainFrame = new mainGui(menu, profile, this);
         }
 
-        // startMenuGui();
 
     }
 
@@ -64,13 +64,13 @@ public class App {
 
         //USER ERROR MSG --> User Already Exist
         if(code == 0){
+            //  TODO: Display user already exists error
             signUp.clearInputFields();
         }
         //User Succesfuly Created Account
         else if (code == 1){
             signUp.close();
             startSignInGUI();
-            //Start Menu GUI
         }
         //Unkown Error
         else if (code == 2){

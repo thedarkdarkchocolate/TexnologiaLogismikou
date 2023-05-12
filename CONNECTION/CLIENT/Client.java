@@ -122,7 +122,6 @@ public class Client{
     }
     
     public Menu requestMenu(){
-
         
         Packet<?> requestMenuPacket = new RequestPacket("MENU");
         
