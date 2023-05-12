@@ -1,7 +1,10 @@
 package USER;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import MENU.Menu;
@@ -11,20 +14,45 @@ public class Order implements Serializable{
     
     private final String studentId;
     private final boolean free_meal_provision;
+    private final String orderID;
     private final static String dishCategories [] = {"MAIN_DISH", "GARNISH", "SALAD", "DESERT", "SPECIAL_MENU"};
     private float price;
     private ArrayList<Dish> dishes;
 
-    // TODO: additions: time, date to log the order
+    
     public Order(String studentId, boolean fmp, ArrayList<Dish> dishes){
 
         this.studentId = studentId;
         this.free_meal_provision = fmp;
         this.dishes = dishes;
+        this.orderID = calcOrderID();
         this.calculateOrderTotalPrice();
     }
 
-    
+    // Testing main 
+    // public static void main(String args[]){
+
+    //     Order or = new Order("dai19159", true, new ArrayList<>(Arrays.asList(new Dish("kappa", 4, 3, "MAIN_DISH"), new Dish("kappa", 4, 2, "DESERT"))));
+
+    //     System.out.println(or.getOrderTotalPrice());
+
+    //     System.out.println(or.getOrderID());
+        
+    //     System.out.println(or.dishes);
+    // }
+
+    private String calcOrderID() {
+
+        String id = this.studentId;
+        String urgent = this.free_meal_provision ? "T" : "F";
+        LocalDateTime now = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmmss");
+        String dateTime = now.format(formatter);
+        
+        return id + "_" + urgent + "_" + dateTime;
+    }
+
+
     private void calculateOrderTotalPrice(){
 
         if(!this.free_meal_provision){
@@ -47,9 +75,11 @@ public class Order implements Serializable{
                     this.price += dish.price();
                 else
                     tmpCat.put(dish.dishCatagory(), false);
+                    this.price += dish.price() * (dish.quantity() - 1);
             }
         }
     }
+
 
     public String getStudentId(){
         return this.studentId;
@@ -61,6 +91,14 @@ public class Order implements Serializable{
 
     public ArrayList<Dish> getDishes(){
         return this.dishes;
+    }
+
+    public String getOrderID(){
+        return this.orderID;
+    }
+
+    public float getOrderTotalPrice(){
+        return this.price;
     }
 
 
