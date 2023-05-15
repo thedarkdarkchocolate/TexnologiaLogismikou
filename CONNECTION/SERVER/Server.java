@@ -80,10 +80,11 @@ public class Server{
                 System.out.println("SERVER: Waiting for client to connect");
                 Socket socket = this.serverSocket.accept();                     //  Main Thread waits in this line until the client has connected
                 System.out.println("SERVER: New Client Connected");
-                ClientHandler clientHandler = new ClientHandler(socket, this);  //  Creating new clientHandler and running the constructor
+                Thread thread = new Thread();
+                ClientHandler clientHandler = new ClientHandler(socket, this, thread);  //  Creating new clientHandler and running the constructor
                 clientHandlers.add(clientHandler);                              //  Adding clientHandler to ArrayList
 
-                Thread thread = new Thread(clientHandler);                      //  new Thread starting to exec run in clientHandler
+                thread = new Thread(clientHandler);                      //  new Thread starting to exec run in clientHandler
                 runningThreads.add(thread);
                 thread.start();
 
@@ -157,8 +158,8 @@ public class Server{
     //  Txt menu file format: The first line should always start with BREAKFAST
     //  BREAKFAST declares that the following menu is for the breakfast, a service should always start and end with the same word
     //  BREAKFAST menu ends when there is another BREAKFAST in a line, after that there should always be LAUNCH service and after that DINNER
-    //  The char "-" when is present in a line the line will always be skipped, so it's used so is easier to read the menu.txt
-    //  The dish catagories don't need to follow an exact order place your dish catagory and in the next line write the dish
+    //  The char "-" when is present in a line, the line will always be skipped, it's used to make it easier to read the menu.txt
+    //  The dish catagories don't need to follow an exact order, place your dish catagory and in the next line write the dish
     private void menuReader(String day){
 
         try {
