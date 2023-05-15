@@ -20,11 +20,12 @@ public class ClientHandler implements Runnable{
     private ObjectOutputStream objOut;
     private ObjectInputStream objIn;   
     private Server server;
+    private Thread clientHandlerThread;
     private Boolean isSignedIn;
     private Profile clientProfile;
 
     
-    public ClientHandler(Socket socket, Server server) throws ClassNotFoundException{
+    public ClientHandler(Socket socket, Server server, Thread thread) throws ClassNotFoundException{
         
 
         try {
@@ -34,6 +35,7 @@ public class ClientHandler implements Runnable{
             this.isSignedIn = false;
             this.objOut = new ObjectOutputStream(this.socket.getOutputStream());
             this.objIn = new ObjectInputStream(this.socket.getInputStream());
+            this.clientHandlerThread = thread;
 
 
         } catch (IOException e) {
@@ -57,13 +59,11 @@ public class ClientHandler implements Runnable{
             }
 
         } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            System.out.println("SERVER: Client Disconnected");            
         }
         
-        Scanner sc = new Scanner(System.in);
-        sc.nextLine();
-        sc.close();
         closeEveryThing();
+        
 
     }
 
@@ -225,20 +225,22 @@ public class ClientHandler implements Runnable{
     
     
     public void closeEveryThing() {
-        removeClientHandler();
         try {
             if (this.objIn != null)
-                this.objIn.close();
+            this.objIn.close();
             
             if(this.objOut != null)
-                this.objOut.close();
+            this.objOut.close();
             
             if (this.socket != null)
-                this.socket.close();
-
-
+            this.socket.close();
+            
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
+        removeClientHandler();
+        // closing thread
+        this.clientHandlerThread.interrupt();
     }
 }
