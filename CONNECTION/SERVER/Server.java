@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -21,13 +22,11 @@ import USER.*;
 public class Server{
     
     private ServerSocket serverSocket;
-    private static HashMap<String, String> credentialsDataBase = new HashMap<>();
-    private static HashMap<String, Profile> profilesDataBase = new HashMap<>();
-    private static HashMap<String, Boolean> mealProvisionDataBase = new HashMap<>();
     private static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     private static ArrayList<Thread> runningThreads = new ArrayList<>();
     private static Queue<Order> orderQ = new PriorityQueue<Order>();
     private final static Lock queueLock = new ReentrantLock();
+    private DatabaseHandler dbHandler;
     private Thread serverCommandThread;
     private Menu menu;
 
@@ -49,27 +48,12 @@ public class Server{
 
     public Server() throws IOException{
 
-
-        //Creating Suto DataBase
-        //Temp DataBase Makes Acc from dai19000 - dai19199 || pass 19000 - 19199
-        //Also creating Profile Database for the same accounts
-        for(int i = 0; i < 200; i++){
-            String studentId = "dai" + ((Integer)(19000 + i)).toString();
-            String pass = ((Integer)(19000 + i)).toString();
-            String email = studentId + "@uom.edu.gr";
-            String cred[] = {studentId, pass, email};
-            Profile tmp;
-            
-            if (i%5==0 || i == 159) tmp = new Profile(cred, true);
-            else tmp = new Profile(cred, false);
-            
-            credentialsDataBase.put(studentId, pass);
-            profilesDataBase.put(studentId, tmp);
+        // Initializing DatabaseHandler
+        try {
+            this.dbHandler = new DatabaseHandler();
+        } catch (SQLException e) {
+            // TODO: handle exception
         }
-
-        //Adding studentIds to meal provision database
-        mealProvisionDataBase.put("isc19159", true);
-
         
 
         // TODO: Create Menu Not final place just for testing(we need live menu)
@@ -109,32 +93,50 @@ public class Server{
         }
     }
 
-    public boolean authPassWithUsername(String name, String pass){
-        // credentialsDataBase when the name isn't in the data base it returns Null and equals can't compare Null with an object
-        return credentialsDataBase.get(name).equals(pass);
+    public boolean authLogInCredentials(String studentId, String pass){
+        
+        try {
+            return dbHandler.logInAuth(studentId, pass);
+        } catch (Exception e) {
+            // TODO: handle exception
+            return false;
+        }
     }
 
-    public boolean authUsernamesMatch(String name){
-        return credentialsDataBase.keySet().contains(name);
+    public boolean checkIfUsernameExists(String studentId) {
+
+        try {
+            return this.dbHandler.checkIfUserExists(studentId);
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
     }
+
 
     public void registerNewAccount(String cred[]){
-        // cred[]: 0 --> username, 1 --> pass, 2 --> email
-        credentialsDataBase.put(cred[0], cred[1]);
-        profilesDataBase.put(cred[0], new Profile(cred, checkForMealProvision(cred[0])));
+        // cred[]: 0 --> studentId, 1 --> pass, 2 --> email
+        try {
+            this.dbHandler.insertToUserProfileDataBase(new Profile(cred, checkForMealProvision(cred[0])));
+            this.dbHandler.insertToLogInCredDataBase(cred[0], cred[1]);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
     }
 
     
     private boolean checkForMealProvision(String studentId) {
         try {
-            return mealProvisionDataBase.get(studentId);
+            return true; //mealProvisionDataBase.get(studentId);
         } catch (Exception e) {
             return false;
         }
     }
 
-    public Profile getProfile(String studentId) {
-        return profilesDataBase.get(studentId);
+    public Profile getProfile(String studentId) throws Exception {
+        return this.dbHandler.getStudentProfileById(studentId);
     }
 
     public Menu getMenu(){
@@ -267,6 +269,7 @@ public class Server{
         
     }
 
+   
     
     
 }

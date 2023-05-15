@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -136,12 +137,23 @@ public class ClientHandler implements Runnable{
 
             
         boolean authCompleted = checkCredentials(signInPacket);
+        Packet<Boolean> srvAnswr;
         if(authCompleted){ 
             
-            this.clientProfile = this.server.getProfile(signInPacket.getStudentId());
-            isSignedIn = true;
-        }
-        Packet<Boolean> srvAnswr = new ServerAnswerPacket(authCompleted);
+            try {
+                
+                this.clientProfile = this.server.getProfile(signInPacket.getStudentId());
+                isSignedIn = true;
+                srvAnswr = new ServerAnswerPacket(authCompleted);
+
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                srvAnswr = new ServerAnswerPacket(false);
+                e.printStackTrace();
+            }
+
+        }else
+            srvAnswr = new ServerAnswerPacket(false);
 
         try {
             objOut.writeObject(srvAnswr);
@@ -160,8 +172,11 @@ public class ClientHandler implements Runnable{
         String username = dict.get("username");
         String password = dict.get("password");
         String email = dict.get("email");
-
-        String cred[] = {username, password, email};
+        String firstName = dict.get("firstName");
+        String lastName = dict.get("lastName");
+        
+        
+        String cred[] = {username, password, email, firstName, lastName};
         boolean userExists = checkIfUserExists(signUpPacket);
 
         if(!userExists){
@@ -187,15 +202,12 @@ public class ClientHandler implements Runnable{
     private boolean checkCredentials(SignInPacket userSignInPacket){
 
         HashMap<String, String> dict = userSignInPacket.getPacketData();
-        String usrnm = dict.get("username");
+        String studentId = dict.get("username");
         String pass = dict.get("password");
         
-        // authPassWithUsername throws NullPointerException
+        // authLogInCredentials throws NullPointerException
         try{
-            boolean usernamesMatch = server.authUsernamesMatch(usrnm);
-            boolean passwordsMatch = server.authPassWithUsername(usrnm, pass);
-
-            return usernamesMatch && passwordsMatch;
+            return this.server.authLogInCredentials(studentId, pass);
         }catch(NullPointerException e){
             return false;
         }
@@ -204,7 +216,7 @@ public class ClientHandler implements Runnable{
 
     private boolean checkIfUserExists(SignUpPacket userSignUpPacket){
         // Checking if username is already in the database using the same fuction to logIn a user
-        return server.authUsernamesMatch(userSignUpPacket.getPacketData().get("username"));
+        return server.checkIfUsernameExists(userSignUpPacket.getPacketData().get("username"));
     }
 
     public void removeClientHandler(){
