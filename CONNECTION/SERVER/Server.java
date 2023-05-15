@@ -8,7 +8,6 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
@@ -75,7 +74,7 @@ public class Server{
 
     
     public void startServer(){
-        
+
         while(!this.serverSocket.isClosed()){    
             try {
                 System.out.println("SERVER: Waiting for client to connect");
@@ -278,6 +277,7 @@ public class Server{
             // Terminating clientHandler, their threads and closing serverSocket 
             
             scanner.close();
+            closeServer();
 
         }
 
