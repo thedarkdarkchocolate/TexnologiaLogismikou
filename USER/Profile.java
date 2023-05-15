@@ -10,12 +10,12 @@ public class Profile implements Serializable{
     private String email;
     private String firstName;
     private String lastName;
-    private ArrayList<Order> prevOrders;
     private boolean free_meal_provision;
+    private ArrayList<Order> prevOrders;
     
 
     
-    // on cred[] || 0 --> studentId, 1 --> password, 2 --> e-mail, 3 --> firstName, 4 --> lastName||
+    // on cred[] || 0 --> studentId, 1 --> password, 2 --> e-mail, 3 --> firstName, 4 --> lastName ||
     public Profile(String[] cred, boolean free_meal_provision){
         
         this.studentId = cred[0];

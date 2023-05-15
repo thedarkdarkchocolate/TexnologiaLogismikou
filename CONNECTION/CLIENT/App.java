@@ -51,7 +51,7 @@ public class App {
             //  TODO: startMenuGUI
             //  mainGui
             profile.printProfileInfo();
-            menu.printWholeDayMenu();
+            // menu.printWholeDayMenu();
             this.mainFrame = new mainGui(menu, profile, this);
         }
 
