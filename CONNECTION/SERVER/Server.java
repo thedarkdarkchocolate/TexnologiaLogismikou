@@ -75,6 +75,7 @@ public class Server{
 
     
     public void startServer(){
+        
         while(!this.serverSocket.isClosed()){    
             try {
                 System.out.println("SERVER: Waiting for client to connect");
@@ -92,6 +93,10 @@ public class Server{
                 closeServerSocket();
             }
         }
+
+        // Terminating clientHandlers, their threads, serverSocket and closing DataBase Connection
+        closeServer();
+
     }
 
     public boolean authLogInCredentials(String studentId, String pass){
@@ -226,7 +231,7 @@ public class Server{
 
     }
 
-    public void closeServerSocket(){
+    private void closeServerSocket(){
         try {
             if(serverSocket != null)
                 serverSocket.close();
@@ -235,34 +240,44 @@ public class Server{
         }
     }
 
+    private void closeClientHandlers(){
+
+        for(ClientHandler clientHandler: clientHandlers)
+                clientHandler.closeEveryThing();
+
+    }
+
+    private void closeDatabaseHandler(){
+        this.dbHandler.closeDB();
+    }
+
+    private void closeServer(){
+
+        closeClientHandlers();
+        closeServerSocket();
+        closeDatabaseHandler();
+        
+    }
+
+
+
     public class ServerCommandHandler implements Runnable{
 
         @Override
         public void run() {
             
-            Scanner sc = new Scanner(System.in);
+            Scanner scanner = new Scanner(System.in);
             String command = "";
 
             while(!command.equals("EXIT")){
 
-                command = sc.nextLine();
+                command = scanner.nextLine();
 
             }
 
-            for(ClientHandler client: clientHandlers)
-                client.closeEveryThing();
-                
-            for (Thread tr: runningThreads){
-                
-                try {
-                    tr.interrupt();
-
-                } catch (Exception e) {
-                    
-                }
-            }
-            sc.close();
-            closeServerSocket();
+            // Terminating clientHandler, their threads and closing serverSocket 
+            
+            scanner.close();
 
         }
 
