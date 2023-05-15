@@ -151,12 +151,14 @@ public class signUpGui extends JFrame{
       public void actionPerformed(ActionEvent e) {
 
          if(e.getSource().equals(signUp)){
-            String usrnm = studentId.getText();
+
+            String studId = studentId.getText();
             String mail = email.getText();
             String pass = new String(password.getPassword());
             String firstname = firstName.getText();
             String lastname = lastName.getText();
-            if(!usrnm.isEmpty() && !pass.isEmpty() && !mail.isEmpty()){
+
+            if(!studId.isEmpty() && !pass.isEmpty() && !mail.isEmpty() && !firstname.isEmpty() && !lastname.isEmpty()){
                if(pass.length() < 5){
                   // Display Error on GUI --> password must be 5 or more characters
                   System.out.println("password must be 5 or more characters");
@@ -166,12 +168,13 @@ public class signUpGui extends JFrame{
                // else if (!isEmailValid(mail)) {   /* TODO: Display Error on GUI --> wrong email format */ System.out.println("GUI: Wrong email format");  }
                else
                //Here we sent the info to the Class app so it be send to the server and further validate the credentials 
-                  app.sendSignUpInfo(usrnm, pass, mail, firstname, lastname);
+                  app.sendSignUpInfo(studId, pass, mail, firstname, lastname);
             }
             else {
                clearInputFields();
                //Display Error For Empty Username or Password or email
             }
+            
          }
          else if (e.getSource().equals(signIn)){
             //Close loginWindow 
