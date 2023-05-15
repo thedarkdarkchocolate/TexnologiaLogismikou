@@ -58,9 +58,9 @@ public class App {
 
     }
 
-    public void sendSignUpInfo(String studentNumber, String pass, String mail) {
+    public void sendSignUpInfo(String studentNumber, String pass, String mail, String firstName, String lastName) {
 
-        int code = client.sendSignUpInfo(studentNumber, pass, mail);
+        int code = client.sendSignUpInfo(studentNumber, pass, mail, firstName, lastName);
 
         //USER ERROR MSG --> User Already Exist
         if(code == 0){

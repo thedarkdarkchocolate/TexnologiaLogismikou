@@ -14,7 +14,7 @@ public class signUpGui extends JFrame{
 	
    private App app;
 	private JPasswordField password;
-	private JTextField name ,lastName, studentId, email;
+	private JTextField firstName ,lastName, studentId, email;
 	private JLabel label_password,label_name,label_lastName,label_studentId, label_email;
 	private JButton signUp, signIn;
 	private ImageIcon icon = new ImageIcon("src/ASSETS/logo-new.png");
@@ -71,8 +71,8 @@ public class signUpGui extends JFrame{
       //message= new JLabel("Αν δεν έχετε λογαριασμό κάντε:");
       // message.setBounds(200,300,250,40);
       
-      name=new JTextField();
-      name.setBounds(350,150,200,40);
+      firstName =new JTextField();
+      firstName.setBounds(350,150,200,40);
       
       lastName=new JTextField();
       lastName.setBounds(350,200,200,40);
@@ -95,7 +95,7 @@ public class signUpGui extends JFrame{
       
       
       this.add(label_name);
-      this.add(name);
+      this.add(firstName);
       
       this.add(label_password);
       this.add(password);
@@ -122,7 +122,7 @@ public class signUpGui extends JFrame{
    }
 
    public void clearInputFields(){
-      this.name.setText("");
+      this.firstName.setText("");
       this.lastName.setText("");
       this.password.setText("");
       this.email.setText("");
@@ -133,7 +133,7 @@ public class signUpGui extends JFrame{
 
       String regex = "^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}";  
       //"^[\\w!#$%&'*+/=?`{|}~^-]+(?:\\.[\\w!#$%&'*+/=?`{|}~^-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,6}$" check for at
-      //  least one dot in the domain name and after the dot, it consist only the letters. The top-level domain should have only two
+      //  least one dot in the domain name and after the dot, it consist only with letters. The top-level domain should have only two
       //  to six letters which is also checked by this regex.
       
       // Here checks the pattern with the regex parameters and return true if the email is in the above rules 
@@ -154,6 +154,8 @@ public class signUpGui extends JFrame{
             String usrnm = studentId.getText();
             String mail = email.getText();
             String pass = new String(password.getPassword());
+            String firstname = firstName.getText();
+            String lastname = lastName.getText();
             if(!usrnm.isEmpty() && !pass.isEmpty() && !mail.isEmpty()){
                if(pass.length() < 5){
                   // Display Error on GUI --> password must be 5 or more characters
@@ -161,10 +163,10 @@ public class signUpGui extends JFrame{
                   password.setText("");
                }
                // Uncomment/comment the line to check for the email format 
-               // else if (!isEmailValid(mail)) {   /* TODO: Display Error on GUI --> wrong email format */ System.out.println("GsUI: Wrong email format");  }
+               // else if (!isEmailValid(mail)) {   /* TODO: Display Error on GUI --> wrong email format */ System.out.println("GUI: Wrong email format");  }
                else
                //Here we sent the info to the Class app so it be send to the server and further validate the credentials 
-                  app.sendSignUpInfo(usrnm, pass, mail);
+                  app.sendSignUpInfo(usrnm, pass, mail, firstname, lastname);
             }
             else {
                clearInputFields();

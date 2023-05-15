@@ -4,10 +4,8 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
-import MENU.Menu;
 
 
 public class Order implements Serializable{
@@ -15,16 +13,18 @@ public class Order implements Serializable{
     private final String studentId;
     private final boolean free_meal_provision;
     private final String orderID;
+    private final boolean takeAway;
     private final static String dishCategories [] = {"MAIN_DISH", "GARNISH", "SALAD", "DESERT", "SPECIAL_MENU"};
     private float price;
     private ArrayList<Dish> dishes;
 
     
-    public Order(String studentId, boolean fmp, ArrayList<Dish> dishes){
+    public Order(String studentId, boolean fmp, boolean takeAway, ArrayList<Dish> dishes){
 
         this.studentId = studentId;
         this.free_meal_provision = fmp;
         this.dishes = dishes;
+        this.takeAway = takeAway;
         this.orderID = calcOrderID();
         this.calculateOrderTotalPrice();
     }
@@ -85,8 +85,12 @@ public class Order implements Serializable{
         return this.studentId;
     }
 
-    public Boolean hasFreeMealProvison(){
+    public boolean hasFreeMealProvison(){
         return this.free_meal_provision;
+    }
+
+    public boolean isOrderTakeAway(){
+        return this.takeAway;
     }
 
     public ArrayList<Dish> getDishes(){

@@ -72,12 +72,12 @@ public class Client{
     }
     
 
-    public int sendSignUpInfo(String username, String password, String email) {
+    public int sendSignUpInfo(String username, String password, String email, String firstName, String lastName) {
         System.out.println("Client: User Credentials: Username: "+ username +", Password: "+ password + ", E-mal: " + email);
 
         try {
             
-            Packet<?> cred = new SignUpPacket(username, password, email);
+            Packet<?> cred = new SignUpPacket(username, password, email, firstName, lastName);
             objOut.writeObject(cred);
             objOut.flush();
             ServerAnswerPacket srvAnswer;
