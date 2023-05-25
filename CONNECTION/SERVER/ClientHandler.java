@@ -55,7 +55,12 @@ public class ClientHandler implements Runnable{
             while(socket.isConnected()){
 
                 Packet<?> pckt = (Packet<?>)objIn.readObject(); // waits here until a packet from the client arrives
-                reroutePacket(pckt);
+                try {
+                    reroutePacket(pckt);
+                } catch (Exception e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
             }
 
         } catch (ClassNotFoundException | IOException e) {
@@ -67,17 +72,27 @@ public class ClientHandler implements Runnable{
 
     }
 
-    private void reroutePacket(Packet<?> pckt) {
+    private void reroutePacket(Packet<?> pckt) throws Exception {
 
         switch(pckt.getPacketType()){
 
             case "SIGNIN":
                 if(!this.isSignedIn)
                     signInHandler((SignInPacket)pckt);
+                else
+                    throw new Exception("REROUTE PACKET: Client trying to sign-In while he is signed in");
                 break;
             case "SIGNUP":
                 if(!this.isSignedIn)
                     signUpHandler((SignUpPacket)pckt);
+                else
+                    throw new Exception("REROUTE PACKET: Client trying to sign-Up while he is signed in");
+                break;
+            case "ORDER":
+                if(this.isSignedIn)
+                    orderHandler((OrderPacket)pckt);
+                else
+                    throw new Exception("REROUTE PACKET: Client send an order while he is not Signed-In");
                 break;
             case "REQUEST":
                 requestHandler((RequestPacket)pckt);
@@ -108,6 +123,11 @@ public class ClientHandler implements Runnable{
 
     }
 
+    private void orderHandler(OrderPacket orderPacket){
+        this.server.insertOrder(orderPacket.getPacketData());
+    }
+
+
     private void sendMenu(){
 
         Packet<?> menuPacket = new MenuPacket(this.server.getMenu());
@@ -132,6 +152,18 @@ public class ClientHandler implements Runnable{
 
     }
 
+    // This method is called only by the Server when there is an update on the clients order confirmation
+    // (When the employee Accepts or Denies the Order then it sends to the client the outcome)
+    public void sendOrderConfirmationStatus(boolean accepted){
+        ServerAnswerPacket serverAnswer = new ServerAnswerPacket(accepted);
+        try {
+            objOut.writeObject(serverAnswer);
+            objOut.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     private void signInHandler(SignInPacket signInPacket){
 
@@ -144,6 +176,7 @@ public class ClientHandler implements Runnable{
                 
                 this.clientProfile = this.server.getProfile(signInPacket.getStudentId());
                 isSignedIn = true;
+                this.server.insertToClientHandlerById(signInPacket.getStudentId(), this);
                 srvAnswr = new ServerAnswerPacket(authCompleted);
 
             } catch (Exception e) {
@@ -153,7 +186,7 @@ public class ClientHandler implements Runnable{
             }
 
         }else
-            srvAnswr = new ServerAnswerPacket(false);
+            srvAnswr = new ServerAnswerPacket(authCompleted);
 
         try {
             objOut.writeObject(srvAnswr);

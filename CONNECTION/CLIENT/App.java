@@ -77,6 +77,10 @@ public class App {
         }
 
     }
+
+    public boolean sendOrder(Order order){
+        return this.client.sendOrder(order);
+    }
     
 
     public void startSignInGUI(){

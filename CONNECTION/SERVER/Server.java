@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Scanner;
@@ -22,6 +23,7 @@ public class Server{
     
     private ServerSocket serverSocket;
     private static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
+    private static HashMap<String, ClientHandler> clientHandlerByStudentId = new HashMap<>();
     private static ArrayList<Thread> runningThreads = new ArrayList<>();
     private final static Lock incomingOrderLock = new ReentrantLock();
     private DatabaseHandler dbHandler;
@@ -60,7 +62,7 @@ public class Server{
         menuReader("1");
 
         //SERVER GUI STARTING...
-        serverGui = new serverGui();
+        serverGui = new serverGui(this);
 
         this.serverSocket = new ServerSocket(5000);                // Creating server socket
         serverCommandThread = new Thread(new ServerCommandHandler());   // New Thread to wait for commands while the server is running
@@ -148,7 +150,7 @@ public class Server{
         return this.menu;
     }
 
-    public void insertOrder(Order order){
+    public boolean insertOrder(Order order){
         try {
 
             incomingOrderLock.lock();
@@ -158,10 +160,21 @@ public class Server{
 
 
             incomingOrderLock.unlock();
-            
+
+            return true;
+
         } catch (Exception e) {
-            // TODO: handle exception
+            return false;
         }
+    }
+
+    public void insertToClientHandlerById(String studentID, ClientHandler cl){
+        clientHandlerByStudentId.put(studentID, cl);
+    }
+
+    // This method is called by the serverGui when the employee accepts or denies the clients with studentID order
+    public void sendOrderStatusUpdateToClient(String studentID, boolean accepted){
+        clientHandlerByStudentId.get(studentID).sendOrderConfirmationStatus(accepted);
     }
 
     //  Txt menu files day: String day --> 1 - 5    (Monday-Friday)
@@ -261,6 +274,7 @@ public class Server{
         closeClientHandlers();
         closeServerSocket();
         closeDatabaseHandler();
+        
         
     }
 

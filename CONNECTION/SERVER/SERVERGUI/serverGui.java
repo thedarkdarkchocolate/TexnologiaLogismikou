@@ -5,40 +5,28 @@ import java.util.HashMap;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.GroupLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
+
+import CONNECTION.SERVER.Server;
+
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
-import java.awt.Insets;
-import java.awt.LayoutManager;
-import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -60,6 +48,8 @@ public class serverGui {
     private JPanel confirmedListPanel;
     private JPanel onGoingListPanel;
     private JPanel completedListPanel;
+
+    private Server server;
     
     
     // Main for testing
@@ -67,9 +57,23 @@ public class serverGui {
         // Run the GUI on the Event Dispatch Thread (EDT)
         SwingUtilities.invokeLater(serverGui::new);
     }
-    
-    
+
+    // Constructor for testing with main
     public serverGui(){
+
+        this.startServerGui();
+        ArrayList<Dish> d = new ArrayList<>();
+        // for(int i = 0; i < 10; i++)
+        d.add(new Dish("fasolakia", 3, 2, "MAIN_DISH"));
+
+        this.insertIncomingOrder(new Order("dai19159", false, false, d));
+    }
+
+    
+    // Constructor called by server
+    public serverGui(Server server){
+
+        this.server = server;
 
         this.startServerGui();
         ArrayList<Dish> d = new ArrayList<>();
@@ -80,7 +84,6 @@ public class serverGui {
         
     }
 
-    // TODO: GUI display code
     private void startServerGui(){
 
         frame = new JFrame("Bite-Byte-UoM");
@@ -155,6 +158,8 @@ public class serverGui {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         return panel;
     }
+
+
     // panelCode --> 1: confirmationPanel, 2: On-goingPanel, 3: completedOrderPanel
     private void addOrderToPanel(Order order, JPanel panel, int panelCode) {
 
@@ -183,7 +188,7 @@ public class serverGui {
         gbc.gridy += 1;
         orderPanel.add(freeMealLabel, gbc);
         
-        JLabel takeawayLabel = new JLabel(order.isOrderTakeAway() ? "TakeAway" : "Dine-In");
+        JLabel takeawayLabel = new JLabel(order.isOrderTakeAway() ? "--TakeAway--" : "--Dine-In--");
         gbc.gridy += 1;
         orderPanel.add(takeawayLabel, gbc);
         
@@ -258,6 +263,7 @@ public class serverGui {
         // this.waitingConfirmationOrders.put(order.getOrderID(), order);
 
         this.addOrderToPanel(order, this.confirmedListPanel, panelCode);
+        // Refreshes GUI
         SwingUtilities.updateComponentTreeUI(frame);
     }
 
@@ -269,11 +275,15 @@ public class serverGui {
             boolean accepted = ((AbstractButton) e.getSource()).getText().equals("Accept") ? true : false;
 
             int panelCode = 2;
+            
+            // Retriving order from dict
+            Order tmpOrder = confirmationListButtons.get(e.getSource()).getOrder();
 
             if(accepted){
                 
-                // Retriving order from dict
-                Order tmpOrder = confirmationListButtons.get(e.getSource()).getOrder();
+
+                // TODO: Send client confirmation resault
+
                 // Removing JPanel from frame
                 confirmedListPanel.remove(confirmationListButtons.get(e.getSource()));
                 // Removing JButton and JPanel from dict
@@ -284,6 +294,9 @@ public class serverGui {
                 // TODO: change status of order to on-Going
 
             }else{
+
+                // TODO: Send client confirmation resault
+                
                 // Removing JPanel from frame
                 confirmedListPanel.remove(confirmationListButtons.get(e.getSource()));
                 // Removing JButton and JPanel from dict
@@ -292,6 +305,9 @@ public class serverGui {
                 // TODO: change status of order to Declined
             }
 
+            // Send Update To client
+            server.sendOrderStatusUpdateToClient(tmpOrder.getStudentId(), accepted);
+            // Refreshes GUI
             SwingUtilities.updateComponentTreeUI(frame);
 
         }
@@ -317,6 +333,8 @@ public class serverGui {
             
             // TODO: change status of order to ReadyToPickUp
 
+
+            // Refreshes GUI
             SwingUtilities.updateComponentTreeUI(frame);
 
         }

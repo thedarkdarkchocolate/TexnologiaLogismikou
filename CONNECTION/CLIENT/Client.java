@@ -141,6 +141,34 @@ public class Client{
         
     }
 
+    public boolean sendOrder(Order order){
+
+        Packet<?> orderPacket = new OrderPacket(order);
+
+        try {
+            
+            objOut.writeObject(orderPacket);
+            objOut.flush();
+
+            ServerAnswerPacket srvAnswer;
+            srvAnswer = (ServerAnswerPacket)objIn.readObject();
+
+            if(srvAnswer.getPacketData()){
+                System.err.println("Client: Order has been Accepted");
+                return true;
+            }else{
+                System.err.println("Client: Order has been Declined");
+                return false;
+            }
+
+
+        } catch (Exception e) {
+            // TODO: handle exception
+            return false;
+        }
+
+    }
+
 
     private boolean checkServerAnswer(ServerAnswerPacket packet){
         
