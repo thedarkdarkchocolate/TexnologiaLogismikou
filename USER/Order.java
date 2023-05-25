@@ -44,12 +44,12 @@ public class Order implements Serializable{
     private String calcOrderID() {
 
         String id = this.studentId;
-        String urgent = this.free_meal_provision ? "T" : "F";
+        String fmp = this.free_meal_provision ? "T" : "F";
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmmss");
         String dateTime = now.format(formatter);
         
-        return id + "_" + urgent + "_" + dateTime;
+        return id + ":" + fmp + ":" + dateTime;
     }
 
 
@@ -65,7 +65,7 @@ public class Order implements Serializable{
 
             HashMap<String, Boolean> tmpCat = new HashMap<>();
             // Initializing dictionary value to true for each catagories to indicate that
-            // this item should't be added to the price because the student has free meal provision 
+            // this item should't be added to the price because the student has free meal provision
             for(String catagory: Order.dishCategories)
                 tmpCat.put(catagory, true);
 

@@ -14,7 +14,7 @@ import java.util.Scanner;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
-
+import CONNECTION.SERVER.SERVERGUI.serverGui;
 import MENU.Menu;
 import USER.*;
 
@@ -23,11 +23,11 @@ public class Server{
     private ServerSocket serverSocket;
     private static ArrayList<ClientHandler> clientHandlers = new ArrayList<>();
     private static ArrayList<Thread> runningThreads = new ArrayList<>();
-    private static Queue<Order> orderQ = new PriorityQueue<Order>();
-    private final static Lock queueLock = new ReentrantLock();
+    private final static Lock incomingOrderLock = new ReentrantLock();
     private DatabaseHandler dbHandler;
     private Thread serverCommandThread;
     private Menu menu;
+    private serverGui serverGui;
 
     // public static void main(String args[]){
 
@@ -60,7 +60,7 @@ public class Server{
         menuReader("1");
 
         //SERVER GUI STARTING...
-
+        serverGui = new serverGui();
 
         this.serverSocket = new ServerSocket(5000);                // Creating server socket
         serverCommandThread = new Thread(new ServerCommandHandler());   // New Thread to wait for commands while the server is running
@@ -150,9 +150,15 @@ public class Server{
 
     public void insertOrder(Order order){
         try {
-            queueLock.lock();
-            orderQ.add(order);
-            queueLock.unlock();
+
+            incomingOrderLock.lock();
+
+            this.serverGui.insertIncomingOrder(order);
+            // TODO: insert Order in DB
+
+
+            incomingOrderLock.unlock();
+            
         } catch (Exception e) {
             // TODO: handle exception
         }

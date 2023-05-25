@@ -242,5 +242,6 @@ public class ClientHandler implements Runnable{
         removeClientHandler();
         // closing thread
         this.clientHandlerThread.interrupt();
+        
     }
 }
