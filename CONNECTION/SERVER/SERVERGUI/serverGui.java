@@ -60,7 +60,7 @@ public class serverGui {
 
     // Constructor for testing with main
     public serverGui(){
-
+        
         this.startServerGui();
         ArrayList<Dish> d = new ArrayList<>();
         // for(int i = 0; i < 10; i++)
@@ -69,7 +69,7 @@ public class serverGui {
         this.insertIncomingOrder(new Order("dai19159", false, false, d));
     }
 
-    
+
     // Constructor called by server
     public serverGui(Server server){
 
@@ -166,12 +166,13 @@ public class serverGui {
         // Create a container panel
         OrderPanel orderPanel = new OrderPanel(order);
         orderPanel.setLayout(new GridBagLayout());
-        // JPanel orderPanel = new JPanel(new GridBagLayout());
+
+        Color backgroundColor = Color.gray;
         
         Border border = BorderFactory.createBevelBorder(BevelBorder.RAISED, Color.GREEN, Color.CYAN);
         orderPanel.setBorder(border);
         
-        orderPanel.setBackground(Color.GRAY);
+        orderPanel.setBackground(backgroundColor);
         orderPanel.setToolTipText("dwefw");
         
         GridBagConstraints gbc = new GridBagConstraints();
@@ -213,6 +214,9 @@ public class serverGui {
                 JButton tmpA = new JButton("Accept");
                 JButton tmpD = new JButton("Decline");
                 JPanel buttonsPanel = new JPanel();
+
+                buttonsPanel.setBackground(backgroundColor);
+
                 buttonsPanel.add(tmpA);
                 buttonsPanel.add(tmpD);
 

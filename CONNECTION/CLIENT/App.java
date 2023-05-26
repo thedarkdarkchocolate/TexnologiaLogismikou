@@ -48,8 +48,6 @@ public class App {
         menu = this.client.requestMenu();
         if(profile != null && menu != null){
 
-            //  TODO: startMenuGUI
-            //  mainGui
             profile.printProfileInfo();
             // menu.printWholeDayMenu();
             this.mainFrame = new mainGui(menu, profile, this);
