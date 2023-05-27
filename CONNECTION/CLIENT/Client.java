@@ -176,6 +176,9 @@ public class Client{
     }
 
     private void closeEveryThing() {
+
+        this.app.closeApp();
+
         try {
             if (this.objIn != null)
                 this.objIn.close();

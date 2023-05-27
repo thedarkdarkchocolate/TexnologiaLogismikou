@@ -17,6 +17,11 @@ public class Order implements Serializable{
     private final static String dishCategories [] = {"MAIN_DISH", "GARNISH", "SALAD", "DESERT", "SPECIAL_MENU"};
     private float price;
     private ArrayList<Dish> dishes;
+    // Holds the dish catagories and a boolean value 
+    // It is used to calculate the final price when the student has free meal provision 
+    // If a student orders an dish from a catagory the the boolean value changes to false so if he orders another dish from the same
+    // dish catagory then it will be added to the final price 
+    private HashMap<String, Boolean> boolCatagories;
 
     
     public Order(String studentId, boolean fmp, boolean takeAway, ArrayList<Dish> dishes){
@@ -26,6 +31,7 @@ public class Order implements Serializable{
         this.dishes = dishes;
         this.takeAway = takeAway;
         this.orderID = calcOrderID();
+        this.boolCatagories = new HashMap<>();
         this.calculateOrderTotalPrice();
     }
 
@@ -63,18 +69,17 @@ public class Order implements Serializable{
         }
         else {
 
-            HashMap<String, Boolean> tmpCat = new HashMap<>();
             // Initializing dictionary value to true for each catagories to indicate that
             // this item should't be added to the price because the student has free meal provision
             for(String catagory: Order.dishCategories)
-                tmpCat.put(catagory, true);
+                this.boolCatagories.put(catagory, true);
 
             for(Dish dish: this.dishes){
 
-                if(!tmpCat.get(dish.dishCatagory()))
+                if(!this.boolCatagories.get(dish.dishCatagory()))
                     this.price += dish.price();
                 else
-                    tmpCat.put(dish.dishCatagory(), false);
+                    this.boolCatagories.put(dish.dishCatagory(), false);
                     this.price += dish.price() * (dish.quantity() - 1);
             }
         }
@@ -103,6 +108,14 @@ public class Order implements Serializable{
 
     public float getOrderTotalPrice(){
         return this.price;
+    }
+
+    public void printOrderInfo(){
+
+        System.out.println(this.studentId);
+        System.out.println(this.orderID);
+        System.out.println(this.free_meal_provision);
+
     }
 
 

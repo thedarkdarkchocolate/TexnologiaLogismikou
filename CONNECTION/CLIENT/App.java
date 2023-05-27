@@ -98,6 +98,17 @@ public class App {
         signUp = new signUpGui(this);
     }
 
-    
+    public void closeApp(){
+
+        if(this.signUp.isActive())
+            this.signUp.close();
+
+        if(this.logIn.isActive())
+            this.logIn.close();
+            
+        if(this.mainFrame.isActive())
+            this.mainFrame.close();
+        
+    }
   
 }

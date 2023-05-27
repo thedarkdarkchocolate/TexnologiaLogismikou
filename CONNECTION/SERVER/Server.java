@@ -9,9 +9,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.Scanner;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -270,14 +269,21 @@ public class Server{
         this.dbHandler.closeDB();
     }
 
-    private void closeServer(){
+    private void closeServerGui(){
+        this.serverGui.close();
+    }
 
+    public void closeServer(){
+
+        closeServerGui();
         closeClientHandlers();
         closeServerSocket();
         closeDatabaseHandler();
         
         
     }
+
+    
 
 
 
@@ -289,15 +295,17 @@ public class Server{
             Scanner scanner = new Scanner(System.in);
             String command = "";
 
-            while(!command.equals("EXIT")){
-
-                command = scanner.nextLine();
+            while(true){
+                if (scanner.nextLine().equals("EXIT")){
+                    //  TODO : close app!!
+                    break;
+                }
 
             }
-
-            // Terminating clientHandler, their threads and closing serverSocket 
             
-            scanner.close();
+            // Terminating clientHandler, their threads and closing serverSocket 
+            System.out.println("Closing...");
+            
             closeServer();
 
         }

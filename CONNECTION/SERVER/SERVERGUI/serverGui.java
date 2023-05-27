@@ -2,8 +2,6 @@ package CONNECTION.SERVER.SERVERGUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -23,9 +21,6 @@ import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
-
-import CONNECTION.SERVER.Server;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
@@ -38,6 +33,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
+import CONNECTION.SERVER.Server;
 import USER.*;
 
 // ServerGui --> Emfanizei tis eiserxomenes parageleies 
@@ -45,8 +41,9 @@ import USER.*;
 //               afou o perastoun ta stoixeia tou foithth theloume na emfanizetai analutika h parageleia kai to poso plhrwmhs  
 //               extra: na exoume kai sxolia parageleias 
 
-public class serverGui {
+public class serverGui extends JFrame{
 
+    private Server server;
     // Button dictionaries with key(Button) and value the OrderPanel class (that extends JPanel and hold the order) in the list that corresponds to that Button
     private HashMap<JButton, OrderPanel> confirmationListButtons = new HashMap<>();
     private HashMap<JButton, OrderPanel> onGoingListButtons = new HashMap<>();
@@ -57,11 +54,10 @@ public class serverGui {
     private JPanel onGoingListPanel;
     private JPanel completedListPanel;
 
-    File soundFile;
-    AudioInputStream audioStream;
-    Clip clip;
+    private File soundFile;
+    private AudioInputStream audioStream;
+    private Clip clip;
 
-    private Server server;
     
     
     // Main for testing
@@ -86,20 +82,17 @@ public class serverGui {
     public serverGui(Server server){
 
         this.server = server;
-        this.soundFile = new File("src/ASSETS/633876__aesterial-arts__notification-ping.wav");
+        this.soundFile = new File("src/ASSETS/short-success-sound-glockenspiel-treasure-video-game-6346.wav");
         try {
             audioStream = AudioSystem.getAudioInputStream(soundFile);
             clip = AudioSystem.getClip();
             clip.open(audioStream);
-            
+            this.playSound();
         } catch (UnsupportedAudioFileException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (IOException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         } catch (LineUnavailableException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -147,7 +140,7 @@ public class serverGui {
         // Add app name label
         JLabel appNameLabel = new JLabel("Bite-Byte-UoM");
         appNameLabel.setFont(appNameLabel.getFont().deriveFont(Font.BOLD, 18f));
-        appNameLabel.setBorder(new EmptyBorder(0, 10, 0, 0));
+        appNameLabel.setBorder(new EmptyBorder(0, 100, 0, 0));
         headerPanel.add(appNameLabel, BorderLayout.CENTER);
 
         return headerPanel;
@@ -231,7 +224,7 @@ public class serverGui {
             orderPanel.add(dishLabel, gbc);
         }
         
-        JLabel priceLabel = new JLabel("Total Price: " + order.getOrderTotalPrice());
+        JLabel priceLabel = new JLabel("Total Price: " + order.getOrderTotalPrice() + "€");
         gbc.gridy += 1;
         orderPanel.add(priceLabel, gbc);
         
@@ -295,7 +288,7 @@ public class serverGui {
 
         // Inserted Order to dict
         // this.waitingConfirmationOrders.put(order.getOrderID(), order);
-        playSound();
+        this.playSound();
 
         this.addOrderToPanel(order, this.confirmedListPanel, panelCode);
         // Refreshes GUI
@@ -410,6 +403,10 @@ public class serverGui {
             return this.order;
         }
 
+    }
+
+    public void close(){
+        this.dispose();
     }
     
 
