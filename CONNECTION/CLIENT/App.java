@@ -1,5 +1,7 @@
 package CONNECTION.CLIENT;
 
+import java.util.ArrayList;
+
 import CONNECTION.CLIENT.CLIENTGUI.*;
 import MENU.*;
 import USER.*;
@@ -52,6 +54,13 @@ public class App {
             // menu.printWholeDayMenu();
             this.mainFrame = new mainGui(menu, profile, this);
         }
+
+        ArrayList<Dish> d = new ArrayList<>();
+        d.add(new Dish("fasolakia", 3, 2, "MAIN_DISH"));
+        d.add(new Dish("feta", 3, 1, "GARNISH"));
+        d.add(new Dish("mhlo", 3, 3, "DESERT"));
+
+        this.sendOrder(new Order(profile.getStudentId(), true, false, d));
 
 
     }

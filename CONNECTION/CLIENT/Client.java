@@ -154,10 +154,10 @@ public class Client{
             srvAnswer = (ServerAnswerPacket)objIn.readObject();
 
             if(srvAnswer.getPacketData()){
-                System.err.println("Client: Order has been Accepted");
+                System.out.println("Client: Order has been Accepted");
                 return true;
             }else{
-                System.err.println("Client: Order has been Declined");
+                System.out.println("Client: Order has been Declined");
                 return false;
             }
 

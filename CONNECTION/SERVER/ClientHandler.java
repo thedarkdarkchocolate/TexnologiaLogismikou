@@ -12,6 +12,7 @@ import java.util.Scanner;
 import PACKETS.*;
 import USER.Profile;
 
+
 public class ClientHandler implements Runnable{
 
 
@@ -62,8 +63,9 @@ public class ClientHandler implements Runnable{
                     e.printStackTrace();
                 }
             }
-
+            
         } catch (ClassNotFoundException | IOException e) {
+            e.printStackTrace();
             System.out.println("SERVER: Client Disconnected");            
         }
         

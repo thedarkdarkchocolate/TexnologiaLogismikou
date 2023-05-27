@@ -3,6 +3,12 @@ package CONNECTION.SERVER.SERVERGUI;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -29,6 +35,8 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 import USER.*;
 
@@ -48,6 +56,10 @@ public class serverGui {
     private JPanel confirmedListPanel;
     private JPanel onGoingListPanel;
     private JPanel completedListPanel;
+
+    File soundFile;
+    AudioInputStream audioStream;
+    Clip clip;
 
     private Server server;
     
@@ -74,13 +86,27 @@ public class serverGui {
     public serverGui(Server server){
 
         this.server = server;
+        this.soundFile = new File("src/ASSETS/633876__aesterial-arts__notification-ping.wav");
+        try {
+            audioStream = AudioSystem.getAudioInputStream(soundFile);
+            clip = AudioSystem.getClip();
+            clip.open(audioStream);
+            
+        } catch (UnsupportedAudioFileException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (LineUnavailableException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+
 
         this.startServerGui();
-        ArrayList<Dish> d = new ArrayList<>();
-        // for(int i = 0; i < 10; i++)
-        d.add(new Dish("fasolakia", 3, 2, "MAIN_DISH"));
-
-        this.insertIncomingOrder(new Order("dai19159", false, false, d));
+        
         
     }
 
@@ -193,18 +219,22 @@ public class serverGui {
         gbc.gridy += 1;
         orderPanel.add(takeawayLabel, gbc);
         
+        
         JLabel dishesLabel = new JLabel("Dishes: ");
         gbc.gridy += 1;
         orderPanel.add(dishesLabel, gbc);
         
         ArrayList<Dish> dishes = order.getDishes();
-        
         for (Dish dish : dishes) {
             JLabel dishLabel = new JLabel(" - " + dish.name() + " x" + dish.quantity());
             gbc.gridy += 1;
             orderPanel.add(dishLabel, gbc);
         }
-
+        
+        JLabel priceLabel = new JLabel("Total Price: " + order.getOrderTotalPrice());
+        gbc.gridy += 1;
+        orderPanel.add(priceLabel, gbc);
+        
         gbc.gridy += 1;
 
         switch(panelCode){
@@ -265,10 +295,15 @@ public class serverGui {
 
         // Inserted Order to dict
         // this.waitingConfirmationOrders.put(order.getOrderID(), order);
+        playSound();
 
         this.addOrderToPanel(order, this.confirmedListPanel, panelCode);
         // Refreshes GUI
         SwingUtilities.updateComponentTreeUI(frame);
+    }
+
+    void playSound() {
+        clip.start();
     }
 
     public class confirmationListButtons implements ActionListener{

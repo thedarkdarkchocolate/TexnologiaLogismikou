@@ -8,5 +8,6 @@ class eLesxhServer{
 
         System.out.println("Server Starting");
         new Server();
+        
     }
 }

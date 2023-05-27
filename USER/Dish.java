@@ -1,8 +1,9 @@
 package USER;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public record Dish (String name, float price, int quantity, String dishCatagory) {
+public record Dish (String name, float price, int quantity, String dishCatagory) implements Serializable{
 
     private final static String dishCategories [] = {"MAIN_DISH", "GARNISH", "SALAD", "DESERT", "SPECIAL_MENU"};
 
