@@ -40,6 +40,7 @@ public class App {
     }
 
     
+    
     public void startMainGui(){
 
         Profile profile;
