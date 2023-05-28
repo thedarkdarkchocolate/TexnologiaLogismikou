@@ -9,7 +9,6 @@ public class eLesxhClient {
             throws UnknownHostException, IOException, ClassNotFoundException, InterruptedException {
 
         new Client();
-        // dgfsef
 
     }
 }
