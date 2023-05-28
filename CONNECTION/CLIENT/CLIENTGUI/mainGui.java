@@ -22,6 +22,7 @@ public class mainGui extends JFrame{
         menuItems = menu.getBreakfastMenu();
 
         this.startMenuGui();
+        
 
 
     }
