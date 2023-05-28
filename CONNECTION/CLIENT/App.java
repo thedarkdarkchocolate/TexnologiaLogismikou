@@ -61,6 +61,7 @@ public class App {
         d.add(new Dish("mhlo", 3, 3, "DESERT"));
 
         this.sendOrder(new Order(profile.getStudentId(), true, false, d));
+        // this.sendOrder(new Order(profile.getStudentId(), false, false, d));
 
 
     }

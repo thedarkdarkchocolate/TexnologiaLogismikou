@@ -27,6 +27,10 @@ public class Profile implements Serializable{
         
     }
 
+    public void setPrevOrders(ArrayList<Order> orders){
+        this.prevOrders = orders;
+    }
+
     
     public String getStudentId() {
         return studentId;
@@ -65,7 +69,9 @@ public class Profile implements Serializable{
         System.out.println("Firstname: "+this.firstName);
         System.out.println("Lastname: "+this.lastName);
         System.out.println("Free email provision: "+this.free_meal_provision);
-        System.out.println("------------------------");
+        System.out.println("---------PrevOrders-----------");
+        for(Order order: this.prevOrders)
+            System.out.println(order);
         
     }
     

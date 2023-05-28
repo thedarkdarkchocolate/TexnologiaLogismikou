@@ -155,10 +155,10 @@ public class Server{
             incomingOrderLock.lock();
 
             this.serverGui.insertIncomingOrder(order);
-            // TODO: insert Order in DB
-
-
+            
             incomingOrderLock.unlock();
+                        
+            this.dbHandler.insertOrder(order, "PENDING");
 
             return true;
 
@@ -175,6 +175,15 @@ public class Server{
     public void sendOrderStatusUpdateToClient(String studentID, boolean accepted){
         System.out.println("ORDER_ID: " + studentID + ", CONFIRAMTION_STATUS: " + accepted);
         clientHandlerByStudentId.get(studentID).sendOrderConfirmationStatus(accepted);
+        // this.dbHandler.insertOrder(order, accepted ? "ACCEPTED" : "DECLINED");
+    }
+
+    public void updateOrderStatus(String orderID, String status){
+        try {
+            this.dbHandler.updateOrderStatus(orderID, status);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     //  Txt menu files day: String day --> 1 - 5    (Monday-Friday)

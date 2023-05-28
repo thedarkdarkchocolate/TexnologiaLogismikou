@@ -88,6 +88,7 @@ public class serverGui extends JFrame{
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             this.playSound();
+
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -339,6 +340,8 @@ public class serverGui extends JFrame{
 
             // Send Update To client
             server.sendOrderStatusUpdateToClient(tmpOrder.getStudentId(), accepted);
+            // Update Order Status
+            server.updateOrderStatus(tmpOrder.getOrderID(), accepted ? "ACCEPTED" : "DECLINED");
             // Refreshes GUI
             SwingUtilities.updateComponentTreeUI(frame);
 
@@ -364,7 +367,7 @@ public class serverGui extends JFrame{
             addOrderToPanel(tmpOrder, completedListPanel, panelCode);
             
             // TODO: change status of order to ReadyToPickUp
-
+            server.updateOrderStatus(tmpOrder.getOrderID(), "READY_FOR_PICK_UP");
 
             // Refreshes GUI
             SwingUtilities.updateComponentTreeUI(frame);
@@ -378,12 +381,16 @@ public class serverGui extends JFrame{
         @Override
         public void actionPerformed(ActionEvent e) {
             
+            // Retriving order from dict
+            Order tmpOrder = completedListButtons.get(e.getSource()).getOrder();
+            
             // Removing JPanel from frame
             completedListPanel.remove(completedListButtons.get(e.getSource()));
             // Removing JButton and JPanel from dict
             completedListButtons.remove(e.getSource());
 
             // TODO: change status of order to TransactionCompleted
+            server.updateOrderStatus(tmpOrder.getOrderID(), "ORDER_COMPLETED");
 
             SwingUtilities.updateComponentTreeUI(frame);
         }

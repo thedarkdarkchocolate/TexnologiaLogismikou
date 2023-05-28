@@ -24,9 +24,11 @@ public class DatabaseHandler {
     
     private Connection connection;
     private HashMap<String, PreparedStatement> preparedStatements;
+
     private static ReentrantLock insertToUserDataBaseLock = new ReentrantLock(true);
     private static ReentrantLock insertToLogInCredentialsDataBaseLock = new ReentrantLock(true);
     private static ReentrantLock insertOrderLock = new ReentrantLock(true);
+    private static ReentrantLock updateOrderStatus = new ReentrantLock(true);
 
     //  main used for easier testing 
     public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException{
@@ -76,6 +78,7 @@ public class DatabaseHandler {
                 put("INSERT_TO_USER_PROFILE", connection.prepareStatement("insert into userProfileData values (?, ?, ?, ?, ?, ?)"));
                 put("INSERT_ORDER", connection.prepareStatement("insert into Orders values (?, ?, ?, ?)"));
                 put("GET_ORDERS_BY_ID", connection.prepareStatement("select OrderObj from Orders where studentID = ? group by OrderID"));
+                put("UPDATE_ORDER_STATUS_BY_ORDER_ID", connection.prepareStatement("update Orders set Status = ? where OrderID = ?"));
     
             }};
 
@@ -91,7 +94,7 @@ public class DatabaseHandler {
         this.preparedStatements.get("INSERT_ORDER").setString(1, order.getOrderID());
         this.preparedStatements.get("INSERT_ORDER").setString(2, order.getStudentId());
         // convert order to byte stream
-        this.preparedStatements.get("INSERT_ORDER").setObject(3, this.orderToByte(order));;
+        this.preparedStatements.get("INSERT_ORDER").setObject(3, this.orderToByte(order));
         this.preparedStatements.get("INSERT_ORDER").setString(4, status);
 
         insertOrderLock.lock();
@@ -114,6 +117,19 @@ public class DatabaseHandler {
             orders.add(byteToOrder(rs.getBinaryStream(1)));
 
         return orders;
+    }
+
+    public void updateOrderStatus(String orderID, String status) throws SQLException{
+
+        this.preparedStatements.get("UPDATE_ORDER_STATUS_BY_ORDER_ID").setString(1, status);
+        this.preparedStatements.get("UPDATE_ORDER_STATUS_BY_ORDER_ID").setString(1, orderID);
+
+        updateOrderStatus.lock();
+
+        this.preparedStatements.get("UPDATE_ORDER_STATUS_BY_ORDER_ID").executeUpdate();
+
+        updateOrderStatus.unlock();
+
     }
 
 
@@ -159,12 +175,16 @@ public class DatabaseHandler {
     public Profile getStudentProfileById(String studentId) throws Exception{
 
         this.preparedStatements.get("GET_PROFILE_BY_ID").setString(1, studentId);
+        
+        ResultSet rs1 = this.preparedStatements.get("GET_PROFILE_BY_ID").executeQuery();
 
-        ResultSet rs = this.preparedStatements.get("GET_PROFILE_BY_ID").executeQuery();
+        String cred[] = {rs1.getString(1), rs1.getString(2), rs1.getString(3), rs1.getString(4), rs1.getString(5)};
 
-        String cred[] = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5)};
+        Profile profile = new Profile(cred, rs1.getByte(6) != 0);
 
-        return new Profile(cred, rs.getByte(6) != 0);
+        profile.setPrevOrders(this.getOrderByID(studentId));
+
+        return profile;
 
     }
 
