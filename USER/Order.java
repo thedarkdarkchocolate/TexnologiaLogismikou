@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -38,7 +39,7 @@ public class Order implements Serializable{
     // Testing main 
     // public static void main(String args[]){
 
-    //     Order or = new Order("dai19159", true, new ArrayList<>(Arrays.asList(new Dish("kappa", 4, 3, "MAIN_DISH"), new Dish("kappa", 4, 2, "DESERT"))));
+    //     Order or = new Order("dai19159", true, false, new ArrayList<>(Arrays.asList(new Dish("kappa", 4, 3, "MAIN_DISH"), new Dish("kappa", 4, 2, "DESERT"))));
 
     //     System.out.println(or.getOrderTotalPrice());
 
@@ -52,10 +53,10 @@ public class Order implements Serializable{
         String id = this.studentId;
         String fmp = this.free_meal_provision ? "T" : "F";
         LocalDateTime now = LocalDateTime.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyMMddHHmmss");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy/MM/dd/HH:mm:ss");
         String dateTime = now.format(formatter);
         
-        return id + ":" + fmp + ":" + dateTime;
+        return dateTime + ":" + fmp + ":" + id;
     }
 
 

@@ -101,13 +101,13 @@ public class App {
 
     public void closeApp(){
 
-        if(this.signUp.isActive())
+        if(this.signUp != null && this.signUp.isActive())
             this.signUp.close();
 
-        if(this.logIn.isActive())
+        if(this.logIn != null && this.logIn.isActive())
             this.logIn.close();
             
-        if(this.mainFrame.isActive())
+        if(this.mainFrame != null && this.mainFrame.isActive())
             this.mainFrame.close();
         
     }

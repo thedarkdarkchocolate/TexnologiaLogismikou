@@ -122,7 +122,7 @@ public class DatabaseHandler {
     public void updateOrderStatus(String orderID, String status) throws SQLException{
 
         this.preparedStatements.get("UPDATE_ORDER_STATUS_BY_ORDER_ID").setString(1, status);
-        this.preparedStatements.get("UPDATE_ORDER_STATUS_BY_ORDER_ID").setString(1, orderID);
+        this.preparedStatements.get("UPDATE_ORDER_STATUS_BY_ORDER_ID").setString(2, orderID);
 
         updateOrderStatus.lock();
 

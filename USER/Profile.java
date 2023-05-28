@@ -71,7 +71,7 @@ public class Profile implements Serializable{
         System.out.println("Free email provision: "+this.free_meal_provision);
         System.out.println("---------PrevOrders-----------");
         for(Order order: this.prevOrders)
-            System.out.println(order);
+            order.printOrderInfo();
         
     }
     
