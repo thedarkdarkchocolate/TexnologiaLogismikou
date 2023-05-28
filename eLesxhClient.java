@@ -10,6 +10,5 @@ public class eLesxhClient {
 
         new Client();
 
-        // fsfsefsgh
     }
 }
