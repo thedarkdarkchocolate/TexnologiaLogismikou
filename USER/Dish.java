@@ -17,4 +17,8 @@ public record Dish (String name, float price, int quantity, String dishCatagory)
     public float getTotalPrice(){
         return price * (float)quantity;
     }
+
+    public void printDishInfo(){
+        System.out.println("DishName: " + name + ", Price: " + price);
+    }
 }
