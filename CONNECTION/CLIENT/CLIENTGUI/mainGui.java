@@ -23,6 +23,8 @@ public class mainGui extends JFrame{
 
         this.startMenuGui();
 
+        
+
 
     }
 
