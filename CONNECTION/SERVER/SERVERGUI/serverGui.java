@@ -389,7 +389,6 @@ public class serverGui extends JFrame{
             // Removing JButton and JPanel from dict
             completedListButtons.remove(e.getSource());
 
-            // TODO: change status of order to TransactionCompleted
             server.updateOrderStatus(tmpOrder.getOrderID(), "ORDER_COMPLETED");
 
             SwingUtilities.updateComponentTreeUI(frame);

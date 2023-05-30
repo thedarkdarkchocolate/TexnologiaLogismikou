@@ -8,6 +8,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -20,7 +22,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
@@ -30,16 +31,18 @@ import CONNECTION.CLIENT.*;
 public class mainGui extends JFrame{
 
     private final static String dishCategories [] = {"MAIN_DISH", "GARNISH", "SALAD", "DESERT", "SPECIAL_MENU"};
+    private ArrayList<JPanel> tabPanels;
     private HashMap<JButton, DishPanel> btnsToDishesList = new HashMap<>();
     private HashMap<String, ArrayList<Dish>> menuItems;
+    private ArrayList<Dish> dishesForOrder;
 
     private JPanel contentPane;
-    private JPanel headerJPanel;
+    private JPanel headerPanel;
     private JTabbedPane TabPane;
-    private JPanel mainPanel, menuPanel, basketPanel;
-    private JPanel orderPanel;
+    private JPanel mainPanel, basketPanel;
 
     private App app;
+    private Profile profile;
 
     public static void  main(String args[]){
         SwingUtilities.invokeLater(mainGui::new);
@@ -49,9 +52,12 @@ public class mainGui extends JFrame{
     public mainGui(Menu menu, Profile profile, App app){
 
         this.app = app;
-
+        this.profile = profile;
+        
         // TODO: get current service menu
         menuItems = menu.getBreakfastMenu();
+        
+        this.dishesForOrder = new ArrayList<>();
 
         this.startMenuGui();
 
@@ -71,13 +77,13 @@ public class mainGui extends JFrame{
         this.setVisible(true);
 
         // this.setLocationRelativeTo(true);
-
+        
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
-        headerJPanel = createHeaderPanel();
-        contentPane.add(headerJPanel, BorderLayout.NORTH);
+
+        createHeaderPanel();
         createMainPanel();
-        // createOrderPanel();
+        
         this.setContentPane(contentPane);
 
 
@@ -86,9 +92,9 @@ public class mainGui extends JFrame{
 
     }
 
-    private JPanel createHeaderPanel() {
+    private void createHeaderPanel() {
 
-        JPanel headerPanel = new JPanel(new BorderLayout());
+        this.headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
 
         // Add icon
@@ -103,71 +109,71 @@ public class mainGui extends JFrame{
         appNameLabel.setBorder(new EmptyBorder(0, 100, 0, 0));
         headerPanel.add(appNameLabel, BorderLayout.CENTER);
 
-        return headerPanel;
+        this.contentPane.add(headerPanel, BorderLayout.NORTH);
     }
 
     private void createMainPanel() {
 
-        JPanel panel1 = new JPanel();
-        JPanel panel2 = new JPanel();
-        JPanel panel3 = new JPanel();
-        // panel1.setBackground(Color.BLACK);
-        // // Add the panels to the tabbed pane with titles
-        // panel1.add(new JScrollPane());
-        // panel2.add(new JScrollPane());
-        // panel3.add(new JScrollPane());
-
+        this.tabPanels = new ArrayList<>();
         mainPanel = new JPanel();
         mainPanel.setPreferredSize(new Dimension(contentPane.getWidth(), contentPane.getHeight()));
         mainPanel.setBackground(Color.BLUE);
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+
         basketPanel = new JPanel();
         TabPane = new JTabbedPane();
+        // new BoxLayout(TabPane., BoxLayout.Y_AXIS);
         
-        // TabPane.setPreferredSize(new Dimension(mainPanel.getWidth()/3 * 2, 300));
-        // basketPanel.setPreferredSize(new Dimension(mainPanel.getWidth()/3, 300));
         basketPanel.setBackground(Color.black);
         
-
-        TabPane.addTab("Tab 1", panel1);
-        TabPane.addTab("Tab 2", panel2);
-        TabPane.addTab("Tab 3", panel3);
-
+        for(String dishC: new String[]{"Main Dishes", "Garnish", "Salad", "Desert", "Special Menu"}){
+            JPanel tmpPanel = new JPanel();
+            this.tabPanels.add(tmpPanel);
+            new BoxLayout(tmpPanel, BoxLayout.X_AXIS);
+            TabPane.add(dishC, tmpPanel);
+        }
+            
         mainPanel.add(TabPane);
+        mainPanel.add(Box.createRigidArea(new Dimension(-100, 0)));
         mainPanel.add(new Box.Filler(new Dimension(50, 0), new Dimension(50, 0), new Dimension(50, 0)));
         mainPanel.add(basketPanel);
+
+        this.addMenuItems();
+
+        JButton tmpB = new JButton("Submit");
+        tmpB.addActionListener(new SubmitButton());
+        basketPanel.add(tmpB);
+
         this.contentPane.add(mainPanel, BorderLayout.CENTER);
 
     }
 
-    private void createOrderPanel() {
-        orderPanel = new JPanel();
-        orderPanel.setLayout(new BoxLayout(orderPanel, BoxLayout.Y_AXIS));
-        JScrollPane scrollPane = new JScrollPane(orderPanel);
-        scrollPane.setBorder(new EmptyBorder(10, 10, 10, 10));
-        contentPane.add(scrollPane, BorderLayout.CENTER);
-    }
 
 
     private void addMenuItems(){
-
+        int counter = 0;
         for(String dishCategory: dishCategories){
-            this.addDishesToPanel(menuItems.get(dishCategory), dishCategory, new JPanel());
-
+            this.addDishesToPanel(menuItems.get(dishCategory), dishCategory, counter);
+            counter++;
         }
 
     }
 
-    private void addDishesToPanel(ArrayList<Dish> dishes, String dishCategory, JPanel panelToAdd){
+    private void addDishesToPanel(ArrayList<Dish> dishes, String dishCategory, int c){
 
         for(Dish dish: dishes){
 
             // TODO: create dish panel and add to corresponding Menu Category
             // need to add buttons 
+            JPanel panelToAdd = this.tabPanels.get(c);
+
+            new BoxLayout(panelToAdd, BoxLayout.Y_AXIS);
+
+            panelToAdd.setBackground(Color.GREEN);
 
             DishPanel dishPanel = new DishPanel(dish);
             
-            dishPanel.add(new JLabel(dish.name()));
+            dishPanel.add(new JLabel(dish.name() + "               "));
             dishPanel.add(new JLabel(String.valueOf(dish.price())));
 
             JButton addButton = new JButton("+");
@@ -223,8 +229,10 @@ public class mainGui extends JFrame{
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("Unimplemented method 'actionPerformed'");
+
+            DishPanel tmpDishP = btnsToDishesList.get(e.getSource());
+            dishesForOrder.add(tmpDishP.getDish());
+        
         }
 
         
@@ -239,7 +247,9 @@ public class mainGui extends JFrame{
 
             // Get order from basket Panel and send it to the app 
             // Before sending start in a new thread the loading animation
-            // app.sendOrder(new Order())
+            app.sendOrder(new Order(profile.getStudentId(), profile.getFree_meal_provision(), true, dishesForOrder));
+
+            dishesForOrder.clear();
             
         }
 
