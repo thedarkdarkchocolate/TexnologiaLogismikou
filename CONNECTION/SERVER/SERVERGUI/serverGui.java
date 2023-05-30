@@ -44,10 +44,10 @@ import USER.*;
 public class serverGui extends JFrame{
 
     private Server server;
-    // Button dictionaries with key(Button) and value the OrderPanel class (that extends JPanel and hold the order) in the list that corresponds to that Button
-    private HashMap<JButton, OrderPanel> confirmationListButtons = new HashMap<>();
-    private HashMap<JButton, OrderPanel> onGoingListButtons = new HashMap<>();
-    private HashMap<JButton, OrderPanel> completedListButtons = new HashMap<>();
+    // Button dictionaries with key(Button) and value the OrderJPanel class (that extends JPanel and hold the order) in the list that corresponds to that Button
+    private HashMap<JButton, OrderJPanel> confirmationListButtons = new HashMap<>();
+    private HashMap<JButton, OrderJPanel> onGoingListButtons = new HashMap<>();
+    private HashMap<JButton, OrderJPanel> completedListButtons = new HashMap<>();
 
     private JFrame frame;
     private JPanel confirmedListPanel;
@@ -155,7 +155,7 @@ public class serverGui extends JFrame{
         listsPanel.add(new JScrollPane(confirmedListPanel));
         listsPanel.add(new JScrollPane(onGoingListPanel));
         listsPanel.add(new JScrollPane(completedListPanel));
-
+        
         return listsPanel;
     }
     
@@ -184,7 +184,7 @@ public class serverGui extends JFrame{
     private void addOrderToPanel(Order order, JPanel panel, int panelCode) {
 
         // Create a container panel
-        OrderPanel orderPanel = new OrderPanel(order);
+        OrderJPanel orderPanel = new OrderJPanel(order);
         orderPanel.setLayout(new GridBagLayout());
 
         Color backgroundColor = Color.gray;
@@ -397,26 +397,28 @@ public class serverGui extends JFrame{
 
     }
 
-    public class OrderPanel extends JPanel{
-
-        private Order order;
-
-        public OrderPanel(Order order){
-            super();
-            this.order = order;
-        }
-
-        public Order getOrder(){
-            return this.order;
-        }
-
-    }
 
     public void close(){
         this.dispose();
     }
     
+    public class OrderJPanel extends JPanel{
 
+        private Order order;
+    
+        public OrderJPanel(Order order){
+            super();
+            this.order = order;
+        }
+    
+        public Order getOrder(){
+            return this.order;
+        }
+    
+    
+        
+    }
+    
 
 
 }
