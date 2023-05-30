@@ -59,9 +59,11 @@ public class logInGui extends JFrame {
         message.setBounds(200,300,250,40);
         
         studentID=new JTextField();
+        studentID.setText("dai19159");
         studentID.setBounds(350,150,200,40);
         
         password=new JPasswordField();
+        password.setText("19159");
         password.setBounds(350,200,200,40);
         
         signIn= new JButton("Sign In");

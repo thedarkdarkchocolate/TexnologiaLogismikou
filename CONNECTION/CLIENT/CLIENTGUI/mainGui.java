@@ -6,7 +6,10 @@ import MENU.Menu;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,16 +18,21 @@ import java.util.HashMap;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 
 import CONNECTION.CLIENT.*;
+import CONNECTION.SERVER.SERVERGUI.serverGui.OrderJPanel;
 
 public class mainGui extends JFrame{
 
@@ -56,25 +64,26 @@ public class mainGui extends JFrame{
         menuItems = menu.getBreakfastMenu();
         
         this.dishesForOrder = new ArrayList<>();
-
+        
         this.startMenuGui();
-
-
+        
+        
     }
 
     public mainGui(){
         startMenuGui();
     }
-
-
+    
+    
     private void startMenuGui() {
-
+        
         this.setTitle("Bite-Byte-UoM");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(800, 600);
         this.setVisible(true);
 
         // this.setLocationRelativeTo(true);
+        this.dishesForOrder = new ArrayList<>();
         
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
@@ -127,12 +136,11 @@ public class mainGui extends JFrame{
         for(String dishC: new String[]{"Main Dishes", "Garnish", "Salad", "Desert", "Special Menu"}){
             JPanel tmpPanel = new JPanel();
             this.tabPanels.add(tmpPanel);
-            new BoxLayout(tmpPanel, BoxLayout.X_AXIS);
             TabPane.add(dishC, tmpPanel);
         }
             
         mainPanel.add(TabPane);
-        mainPanel.add(Box.createRigidArea(new Dimension(-100, 0)));
+        mainPanel.add(Box.createRigidArea(new Dimension(-50, 0)));
         mainPanel.add(new Box.Filler(new Dimension(50, 0), new Dimension(50, 0), new Dimension(50, 0)));
         mainPanel.add(basketPanel);
 
@@ -159,17 +167,30 @@ public class mainGui extends JFrame{
 
     private void addDishesToPanel(ArrayList<Dish> dishes, String dishCategory, int c){
 
+        JPanel panelToAdd = this.tabPanels.get(c);
+        GridBagLayout gbl = new GridBagLayout();
+        panelToAdd.setLayout(gbl);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = 0;
+        gbc.gridx = 1;
+        gbc.gridheight = 1;
+        gbc.fill = GridBagConstraints.VERTICAL;
+        
         for(Dish dish: dishes){
+
+            
 
             // TODO: create dish panel and add to corresponding Menu Category
             // need to add buttons 
-            JPanel panelToAdd = this.tabPanels.get(c);
+            DishPanel dishPanel = new DishPanel(dish);
 
-            new BoxLayout(panelToAdd, BoxLayout.Y_AXIS);
+            // panelToAdd.setLayout(new BoxLayout(panelToAdd, BoxLayout.Y_AXIS));
+            // panelToAdd.setLayout(new BoxLayout(panelToAdd, BoxLayout.PAGE_AXIS));
 
             panelToAdd.setBackground(Color.GREEN);
 
-            DishPanel dishPanel = new DishPanel(dish);
+            // dishPanel.setPreferredSize(new Dimension(panelToAdd.getWidth() - 10, 100));
+            // dishPanel.setSize(panelToAdd.getWidth(), 20);
             
             dishPanel.add(new JLabel(dish.name() + "               "));
             dishPanel.add(new JLabel(String.valueOf(dish.price())));
@@ -180,7 +201,10 @@ public class mainGui extends JFrame{
             
             this.btnsToDishesList.put(addButton, dishPanel);
 
-            panelToAdd.add(dishPanel);
+          
+
+            panelToAdd.add(dishPanel, gbc);
+            // gbc.gridy += 1;
             
         }
 
@@ -252,14 +276,18 @@ public class mainGui extends JFrame{
         public void actionPerformed(ActionEvent e) {
 
             DishPanel tmpDishP = btnsToDishesList.get(e.getSource());
-            for(Dish dish: dishesForOrder){
-                if(dish.equals(tmpDishP.getDish())){
-                    Dish mergedDish = new Dish(dish.name(), dish.price(), dish.quantity() + tmpDishP.getDish().quantity(), getName());
-                    dishesForOrder.remove(dish);
-                    dishesForOrder.add(mergedDish);
-                    break;
+            if(dishesForOrder.contains(tmpDishP.getDish()))
+                for(Dish dish: dishesForOrder){
+                    if(dish.equals(tmpDishP.getDish())){
+                        Dish mergedDish = new Dish(dish.name(), dish.price(), dish.quantity() + tmpDishP.getDish().quantity(), dish.dishCatagory());
+                        dishesForOrder.remove(dish);
+                        dishesForOrder.add(mergedDish);
+                        break;
+                    }
                 }
-            }
+            else
+                dishesForOrder.add(tmpDishP.getDish());
+
         
         }
 
