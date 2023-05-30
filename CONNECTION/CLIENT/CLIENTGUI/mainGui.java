@@ -6,7 +6,10 @@ import MENU.Menu;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,19 +18,21 @@ import java.util.HashMap;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.MatteBorder;
 
 import CONNECTION.CLIENT.*;
+import CONNECTION.SERVER.SERVERGUI.serverGui.OrderJPanel;
 
 public class mainGui extends JFrame {
 
@@ -126,18 +131,12 @@ public class mainGui extends JFrame {
         for (String dishC : new String[] { "Main Dishes", "Garnish", "Salad", "Desert", "Special Menu" }) {
             JPanel tmpPanel = new JPanel();
             this.tabPanels.add(tmpPanel);
-            new BoxLayout(tmpPanel, BoxLayout.X_AXIS);
             TabPane.add(dishC, tmpPanel);
         }
 
         mainPanel.add(TabPane);
-        // mainPanel.add(Box.createRigidArea(new Dimension(-100, 0)));
-        // mainPanel.add(new Box.Filler(new Dimension(100, 0), new Dimension(100, 0),
-        // new Dimension(100, 0)));
-        basketPanel.add(Box.createRigidArea(new Dimension(-100, 0)));
-        // TabPane.add(Box.createRigidArea(new Dimension(+100, 0)));
-        mainPanel.add(new Box.Filler(new Dimension(100, 0), new Dimension(100, 0), new Dimension(100, 0)));
-        createBasketTemplate();
+        mainPanel.add(Box.createRigidArea(new Dimension(-50, 0)));
+        mainPanel.add(new Box.Filler(new Dimension(50, 0), new Dimension(50, 0), new Dimension(50, 0)));
         mainPanel.add(basketPanel);
 
         this.addMenuItems();
@@ -194,7 +193,8 @@ public class mainGui extends JFrame {
             // need to add buttons
             JPanel panelToAdd = this.tabPanels.get(c);
 
-            new BoxLayout(panelToAdd, BoxLayout.Y_AXIS);
+            // panelToAdd.setLayout(new BoxLayout(panelToAdd, BoxLayout.Y_AXIS));
+            // panelToAdd.setLayout(new BoxLayout(panelToAdd, BoxLayout.PAGE_AXIS));
 
             panelToAdd.setBackground(Color.GREEN);
 
