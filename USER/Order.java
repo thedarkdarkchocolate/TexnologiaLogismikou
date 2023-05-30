@@ -79,7 +79,12 @@ public class Order implements Serializable{
                 if(!this.boolCatagories.get(dish.dishCatagory()))
                     this.price += dish.price();
                 else
-                    this.boolCatagories.put(dish.dishCatagory(), false);
+                    if(dish.dishCatagory().equals("MAIN_DISH") || dish.dishCatagory().equals("SPECIAL_MENU")){
+                        this.boolCatagories.put("MAIN_DISH", false);
+                        this.boolCatagories.put("SPECIAL_MENU", false);
+                    }
+                    else
+                        this.boolCatagories.put(dish.dishCatagory(), false);
                     this.price += dish.price() * (dish.quantity() - 1);
             }
         }

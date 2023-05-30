@@ -52,7 +52,7 @@ public class App {
 
             profile.printProfileInfo();
             menu.printWholeDayMenu();
-            // this.mainFrame = new mainGui(menu, profile, this);
+            this.mainFrame = new mainGui(menu, profile, this);
         }
 
         ArrayList<Dish> d = new ArrayList<>();

@@ -8,8 +8,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -221,7 +219,30 @@ public class mainGui extends JFrame{
             return dish;
         }
 
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj)
+                return true;
+            if (obj == null)
+                return false;
+            if (getClass() != obj.getClass())
+                return false;
+            DishPanel other = (DishPanel) obj;
+            if (!getEnclosingInstance().equals(other.getEnclosingInstance()))
+                return false;
+            if (name == null) {
+                if (other.name != null)
+                    return false;
+            } else if (!name.equals(other.name))
+                return false;
+            return true;
+        }
 
+        private mainGui getEnclosingInstance() {
+            return mainGui.this;
+        }
+
+        
 
     }
 
@@ -231,7 +252,14 @@ public class mainGui extends JFrame{
         public void actionPerformed(ActionEvent e) {
 
             DishPanel tmpDishP = btnsToDishesList.get(e.getSource());
-            dishesForOrder.add(tmpDishP.getDish());
+            for(Dish dish: dishesForOrder){
+                if(dish.equals(tmpDishP.getDish())){
+                    Dish mergedDish = new Dish(dish.name(), dish.price(), dish.quantity() + tmpDishP.getDish().quantity(), getName());
+                    dishesForOrder.remove(dish);
+                    dishesForOrder.add(mergedDish);
+                    break;
+                }
+            }
         
         }
 
@@ -247,6 +275,7 @@ public class mainGui extends JFrame{
 
             // Get order from basket Panel and send it to the app 
             // Before sending start in a new thread the loading animation
+            System.out.println(dishesForOrder);
             app.sendOrder(new Order(profile.getStudentId(), profile.getFree_meal_provision(), true, dishesForOrder));
 
             dishesForOrder.clear();
