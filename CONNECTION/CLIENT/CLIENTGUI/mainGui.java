@@ -304,9 +304,11 @@ public class mainGui extends JFrame {
                                             tmpDish.dishCatagory());
 
                 dishesForOrder.put(tmpDish.name(), dishToAdd);
+
                 for(Component dishPanel: basketDishes.getComponents())
                     if(dishToAdd.name().equals(((DishPanel)dishPanel).getName()))
-                        basketDishes.remove((DishPanel)dishPanel);              
+                        basketDishes.remove((DishPanel)dishPanel);       
+
                 addDishToBacket(dishToAdd);
             }
             
@@ -327,6 +329,7 @@ public class mainGui extends JFrame {
             System.out.println(dishesForOrder);
             ArrayList<Dish> dishes = new ArrayList<>();
 
+            // Inserting dishes for order in ArrayList
             for(Dish dish: dishesForOrder.values())
                 if (dish == null) 
                     continue;
