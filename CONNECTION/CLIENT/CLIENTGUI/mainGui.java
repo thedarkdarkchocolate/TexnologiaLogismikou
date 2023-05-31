@@ -5,6 +5,7 @@ import MENU.Menu;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -22,6 +23,7 @@ import javax.swing.BoxLayout;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -234,9 +236,9 @@ public class mainGui extends JFrame {
 
         dishPanel.setBackground(Color.CYAN);
         
-        dishPanel.add(new JLabel(dish.name() + "               "));
-        dishPanel.add(new JLabel(String.valueOf(dish.price())));
-
+        dishPanel.add(new JLabel(dish.name() + "     x" + dish.quantity()));
+        dishPanel.add(new JLabel("Price: " + String.valueOf(dish.price()) + "€"));
+        
         JButton minusButton = new JButton("-");
         minusButton.addActionListener(new AddButtonListener());
         dishPanel.add(minusButton);
@@ -264,7 +266,7 @@ public class mainGui extends JFrame {
 
 
             dishPanel.add(new JLabel(dish.name() + "               "));
-            dishPanel.add(new JLabel(String.valueOf(dish.price())));
+            dishPanel.add(new JLabel("Price: " + String.valueOf(dish.price()) + "€"));
 
             JButton addButton = new JButton("+");
             addButton.addActionListener(new AddButtonListener());
@@ -284,9 +286,6 @@ public class mainGui extends JFrame {
 
     }
     
-
-    
-
     public class AddButtonListener implements ActionListener{
 
         @Override
@@ -305,6 +304,9 @@ public class mainGui extends JFrame {
                                             tmpDish.dishCatagory());
 
                 dishesForOrder.put(tmpDish.name(), dishToAdd);
+                for(Component dishPanel: basketDishes.getComponents())
+                    if(dishToAdd.name().equals(((DishPanel)dishPanel).getName()))
+                        basketDishes.remove((DishPanel)dishPanel);              
                 addDishToBacket(dishToAdd);
             }
             
