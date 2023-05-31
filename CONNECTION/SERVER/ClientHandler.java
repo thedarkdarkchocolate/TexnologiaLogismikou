@@ -160,7 +160,7 @@ public class ClientHandler implements Runnable{
         ServerAnswerPacket serverAnswer = new ServerAnswerPacket(accepted);
         try {
             objOut.writeObject(serverAnswer);
-            objOut.flush();
+            objOut.reset();
         } catch (IOException e) {
             e.printStackTrace();
         }

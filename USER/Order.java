@@ -35,18 +35,6 @@ public class Order implements Serializable{
         this.calculateOrderTotalPrice();
     }
 
-    // Testing main 
-    // public static void main(String args[]){
-
-    //     Order or = new Order("dai19159", true, false, new ArrayList<>(Arrays.asList(new Dish("kappa", 4, 3, "MAIN_DISH"), new Dish("kappa", 4, 2, "DESERT"))));
-
-    //     System.out.println(or.getOrderTotalPrice());
-
-    //     System.out.println(or.getOrderID());
-        
-    //     System.out.println(or.dishes);
-    // }
-
     private String calcOrderID() {
 
         String id = this.studentId;
@@ -75,6 +63,8 @@ public class Order implements Serializable{
                 this.boolCatagories.put(catagory, true);
 
             for(Dish dish: this.dishes){
+
+                if(dish == null) continue;
 
                 if(!this.boolCatagories.get(dish.dishCatagory()))
                     this.price += dish.price();

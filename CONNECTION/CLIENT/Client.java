@@ -179,11 +179,13 @@ public class Client{
 
         try {
             if (this.objIn != null)
+                this.objIn.reset();
                 this.objIn.close();
-            
+                
             if(this.objOut != null)
+                this.objOut.reset();
                 this.objOut.close();
-            
+                
             if (this.clSocket != null)
                 this.clSocket.close();
 

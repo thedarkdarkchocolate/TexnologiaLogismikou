@@ -55,6 +55,7 @@ public class mainGui extends JFrame {
     private JPanel mainPanel;
     private JPanel basketPanel;
     private JPanel basketDishes;
+    private JLabel totalPrice;
 
     private App app;
     private Profile profile;
@@ -183,7 +184,7 @@ public class mainGui extends JFrame {
         JLabel infoLabel = new JLabel("StudentID: " + this.profile.getStudentId() + (this.profile.getFree_meal_provision() ? "\n, Has Free Meal Provision, " : "\n, Doesn't Free Meal Provision, ")
                                          + "Email: " + this.profile.getEmail());
         JButton submitButton = new JButton("Submit");
-        JLabel totalLabel = new JLabel("Total");
+        this.totalPrice = new JLabel("Total: 0.0€");
         JLabel Dishes = new JLabel("Dishes:");
         JPanel radioPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 2, 2)));
         // headerP.setPreferredSize(new Dimension(this.basketPanel.getWidth(), 10));
@@ -211,7 +212,7 @@ public class mainGui extends JFrame {
 
         // bottom template
         bottomP.setLayout(new BoxLayout(bottomP, BoxLayout.X_AXIS));
-        bottomP.add(totalLabel);
+        bottomP.add(totalPrice);
         bottomP.add(Box.createRigidArea(new Dimension(330, 0)));
         submitButton.addActionListener(new SubmitButton());
         bottomP.add(submitButton);
@@ -316,6 +317,12 @@ public class mainGui extends JFrame {
 
                 addDishToBacket(dishToAdd);
             }
+
+            Order tmpOrder = new Order(profile.getStudentId(), profile.getFree_meal_provision(), true, new ArrayList<Dish>(dishesForOrder.values()));
+
+            // TODO: Change takeAway to getButtonChoice
+            totalPrice.setText("Total: " + String.valueOf(tmpOrder.getOrderTotalPrice()) + "€");
+            
             
             SwingUtilities.updateComponentTreeUI(contentPane);
         }
@@ -329,25 +336,31 @@ public class mainGui extends JFrame {
 
             DishPanel tmpDishP = basketButtonsToPanel.get(e.getSource());
 
-            // if(tmpDishP.getDish().quantity() == 1){
-            //     dishesForOrder.put(tmpDish.name(), tmpDish);
-            //     addDishToBacket(tmpDish);
-            // }
-            // else {
+            if(tmpDishP.getDish().quantity() == 1){
+                basketDishes.remove(tmpDishP);
+                dishesForOrder.remove(tmpDishP.getName());
+            }
+            else {
 
-            //     Dish dishToAdd = new Dish(tmpDish.name(), tmpDish.price(),
-            //                                 tmpDish.quantity() + dishesForOrder.get(tmpDish.name()).quantity(),
-            //                                 tmpDish.dishCatagory());
+                Dish dishToAdd = new Dish(tmpDishP.getDish().name(), tmpDishP.getDish().price(),
+                                            dishesForOrder.get(tmpDishP.getDish().name()).quantity() - 1,
+                                            tmpDishP.getDish().dishCatagory());
 
-            //     dishesForOrder.put(tmpDish.name(), dishToAdd);
+                dishesForOrder.put(tmpDishP.getDish().name(), dishToAdd);
 
-            //     for(Component dishPanel: basketDishes.getComponents())
-            //         if(dishToAdd.name().equals(((DishPanel)dishPanel).getName()))
-            //             basketDishes.remove((DishPanel)dishPanel);       
+                for(Component dishPanel: basketDishes.getComponents())
+                    if(dishToAdd.name().equals(((DishPanel)dishPanel).getName()))
+                        basketDishes.remove((DishPanel)dishPanel);       
 
-            //     addDishToBacket(dishToAdd);
-            // }
-            
+                addDishToBacket(dishToAdd);
+            }
+
+            Order tmpOrder = new Order(profile.getStudentId(), profile.getFree_meal_provision(), true, new ArrayList<Dish>(dishesForOrder.values()));
+
+            // TODO: Change takeAway to getButtonChoice
+            totalPrice.setText("Total: " + String.valueOf(tmpOrder.getOrderTotalPrice()) + "€");
+
+
             SwingUtilities.updateComponentTreeUI(contentPane);
         }
 
@@ -358,12 +371,6 @@ public class mainGui extends JFrame {
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            
-
-            // Get order from basket Panel and send it to the app 
-            // Before sending start in a new thread the loading animation
-            
-
             
             ArrayList<Dish> dishes = new ArrayList<>();
             
