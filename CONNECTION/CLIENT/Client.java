@@ -15,13 +15,11 @@ public class Client{
     private ObjectOutputStream objOut;
     private ObjectInputStream objIn;
     private String client_Student_Number;
-    private boolean free_meal_provision;
     private App app;
 
 
     public Client() throws IOException, ClassNotFoundException, InterruptedException, UnknownHostException{
 
-        
         clSocket = new Socket("localhost", 5000);
         objOut = new ObjectOutputStream(clSocket.getOutputStream());
         objIn = new ObjectInputStream(clSocket.getInputStream());
@@ -73,7 +71,7 @@ public class Client{
     
 
     public int sendSignUpInfo(String username, String password, String email, String firstName, String lastName) {
-        System.out.println("Client: User Credentials: Username: "+ username +", Password: "+ password + ", E-mal: " + email);
+        System.out.println("Client: User Credentials: Username: "+ username +", Password: "+ password + ", E-mail: " + email);
 
         try {
             
@@ -148,7 +146,7 @@ public class Client{
         try {
             
             objOut.writeObject(orderPacket);
-            objOut.flush();
+            objOut.reset();
 
             ServerAnswerPacket srvAnswer;
             srvAnswer = (ServerAnswerPacket)objIn.readObject();

@@ -44,10 +44,10 @@ import USER.*;
 public class serverGui extends JFrame{
 
     private Server server;
-    // Button dictionaries with key(Button) and value the OrderPanel class (that extends JPanel and hold the order) in the list that corresponds to that Button
-    private HashMap<JButton, OrderPanel> confirmationListButtons = new HashMap<>();
-    private HashMap<JButton, OrderPanel> onGoingListButtons = new HashMap<>();
-    private HashMap<JButton, OrderPanel> completedListButtons = new HashMap<>();
+    // Button dictionaries with key(Button) and value the OrderJPanel class (that extends JPanel and hold the order) in the list that corresponds to that Button
+    private HashMap<JButton, OrderJPanel> confirmationListButtons = new HashMap<>();
+    private HashMap<JButton, OrderJPanel> onGoingListButtons = new HashMap<>();
+    private HashMap<JButton, OrderJPanel> completedListButtons = new HashMap<>();
 
     private JFrame frame;
     private JPanel confirmedListPanel;
@@ -57,25 +57,6 @@ public class serverGui extends JFrame{
     private File soundFile;
     private AudioInputStream audioStream;
     private Clip clip;
-
-    
-    
-    // Main for testing
-    public static void main(String[] args) {
-        // Run the GUI on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(serverGui::new);
-    }
-
-    // Constructor for testing with main
-    public serverGui(){
-        
-        this.startServerGui();
-        ArrayList<Dish> d = new ArrayList<>();
-        // for(int i = 0; i < 10; i++)
-        d.add(new Dish("fasolakia", 3, 2, "MAIN_DISH"));
-
-        this.insertIncomingOrder(new Order("dai19159", false, false, d));
-    }
 
 
     // Constructor called by server
@@ -88,7 +69,8 @@ public class serverGui extends JFrame{
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             this.playSound();
-
+            
+            
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -97,10 +79,7 @@ public class serverGui extends JFrame{
             e.printStackTrace();
         }
 
-
-
         this.startServerGui();
-        
         
     }
 
@@ -155,7 +134,7 @@ public class serverGui extends JFrame{
         listsPanel.add(new JScrollPane(confirmedListPanel));
         listsPanel.add(new JScrollPane(onGoingListPanel));
         listsPanel.add(new JScrollPane(completedListPanel));
-
+        
         return listsPanel;
     }
     
@@ -184,7 +163,7 @@ public class serverGui extends JFrame{
     private void addOrderToPanel(Order order, JPanel panel, int panelCode) {
 
         // Create a container panel
-        OrderPanel orderPanel = new OrderPanel(order);
+        OrderJPanel orderPanel = new OrderJPanel(order);
         orderPanel.setLayout(new GridBagLayout());
 
         Color backgroundColor = Color.gray;
@@ -225,7 +204,7 @@ public class serverGui extends JFrame{
             orderPanel.add(dishLabel, gbc);
         }
         
-        JLabel priceLabel = new JLabel("Total Price: " + order.getOrderTotalPrice() + "€");
+        JLabel priceLabel = new JLabel("Total Price: " + String.valueOf(order.getOrderTotalPrice()) + "€");
         gbc.gridy += 1;
         orderPanel.add(priceLabel, gbc);
         
@@ -244,14 +223,14 @@ public class serverGui extends JFrame{
                 buttonsPanel.add(tmpA);
                 buttonsPanel.add(tmpD);
 
-                orderPanel.add(buttonsPanel);
-
+                
                 this.confirmationListButtons.put(tmpA, orderPanel);
                 this.confirmationListButtons.put(tmpD, orderPanel);
-
+                
                 tmpA.addActionListener(new confirmationListButtons());
                 tmpD.addActionListener(new confirmationListButtons());
-
+                
+                orderPanel.add(buttonsPanel);
 
                 break;
 
@@ -281,8 +260,6 @@ public class serverGui extends JFrame{
         panel.add(orderPanel);
     }
 
-    // Order should be added to the waitingConfirmationOrders dict and TODO: add order to the UI list waiting for requests
-    // add new button to confirmationListButton
     public void insertIncomingOrder(Order order){
 
         int panelCode = 1;
@@ -297,7 +274,7 @@ public class serverGui extends JFrame{
     }
 
     void playSound() {
-        clip.start();
+        this.clip.start();
     }
 
     public class confirmationListButtons implements ActionListener{
@@ -313,9 +290,6 @@ public class serverGui extends JFrame{
             Order tmpOrder = confirmationListButtons.get(e.getSource()).getOrder();
 
             if(accepted){
-                
-
-                // TODO: Send client confirmation resault
 
                 // Removing JPanel from frame
                 confirmedListPanel.remove(confirmationListButtons.get(e.getSource()));
@@ -324,18 +298,13 @@ public class serverGui extends JFrame{
 
                 addOrderToPanel(tmpOrder, onGoingListPanel, panelCode);
 
-                // TODO: change status of order to on-Going
-
             }else{
 
-                // TODO: Send client confirmation resault
-                
                 // Removing JPanel from frame
                 confirmedListPanel.remove(confirmationListButtons.get(e.getSource()));
                 // Removing JButton and JPanel from dict
                 confirmationListButtons.remove(e.getSource());
 
-                // TODO: change status of order to Declined
             }
 
             // Send Update To client
@@ -389,7 +358,6 @@ public class serverGui extends JFrame{
             // Removing JButton and JPanel from dict
             completedListButtons.remove(e.getSource());
 
-            // TODO: change status of order to TransactionCompleted
             server.updateOrderStatus(tmpOrder.getOrderID(), "ORDER_COMPLETED");
 
             SwingUtilities.updateComponentTreeUI(frame);
@@ -397,26 +365,28 @@ public class serverGui extends JFrame{
 
     }
 
-    public class OrderPanel extends JPanel{
-
-        private Order order;
-
-        public OrderPanel(Order order){
-            super();
-            this.order = order;
-        }
-
-        public Order getOrder(){
-            return this.order;
-        }
-
-    }
 
     public void close(){
         this.dispose();
     }
     
+    public class OrderJPanel extends JPanel{
 
+        private Order order;
+    
+        public OrderJPanel(Order order){
+            super();
+            this.order = order;
+        }
+    
+        public Order getOrder(){
+            return this.order;
+        }
+    
+    
+        
+    }
+    
 
 
 }

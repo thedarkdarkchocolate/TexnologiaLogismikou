@@ -61,7 +61,7 @@ public class App {
         d.add(new Dish("feta", 3, 1, "GARNISH"));
         d.add(new Dish("mhlo", 3, 3, "DESERT"));
 
-        this.sendOrder(new Order(profile.getStudentId(), true, false, d));
+        // this.sendOrder(new Order(profile.getStudentId(), true, false, d));
         // this.sendOrder(new Order(profile.getStudentId(), false, false, d));
 
 
@@ -99,6 +99,7 @@ public class App {
     public void startSignUpGUI(){
         signUp = new signUpGui(this);
     }
+
 
     public void closeApp(){
 

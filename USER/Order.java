@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 
@@ -80,7 +79,12 @@ public class Order implements Serializable{
                 if(!this.boolCatagories.get(dish.dishCatagory()))
                     this.price += dish.price();
                 else
-                    this.boolCatagories.put(dish.dishCatagory(), false);
+                    if(dish.dishCatagory().equals("MAIN_DISH") || dish.dishCatagory().equals("SPECIAL_MENU")){
+                        this.boolCatagories.put("MAIN_DISH", false);
+                        this.boolCatagories.put("SPECIAL_MENU", false);
+                    }
+                    else
+                        this.boolCatagories.put(dish.dishCatagory(), false);
                     this.price += dish.price() * (dish.quantity() - 1);
             }
         }
@@ -116,6 +120,7 @@ public class Order implements Serializable{
         System.out.println(this.studentId);
         System.out.println(this.orderID);
         System.out.println(this.free_meal_provision);
+        System.out.println(this.dishes);
 
     }
 
