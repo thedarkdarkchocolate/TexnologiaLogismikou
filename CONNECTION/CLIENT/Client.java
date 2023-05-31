@@ -21,7 +21,6 @@ public class Client{
     public Client() throws IOException, ClassNotFoundException, InterruptedException, UnknownHostException{
 
         clSocket = new Socket("localhost", 5000);
-        System.out.println(clSocket.getLocalAddress());;
         objOut = new ObjectOutputStream(clSocket.getOutputStream());
         objIn = new ObjectInputStream(clSocket.getInputStream());
         client_Student_Number = "";
