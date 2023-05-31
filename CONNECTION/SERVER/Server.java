@@ -101,6 +101,8 @@ public class Server{
 
     public boolean authLogInCredentials(String studentId, String pass){
         
+        if(clientHandlerByStudentId.keySet().contains(studentId)) return false;
+
         try {
             return dbHandler.logInAuth(studentId, pass);
         } catch (Exception e) {
@@ -169,6 +171,10 @@ public class Server{
 
     public void insertToClientHandlerById(String studentID, ClientHandler cl){
         clientHandlerByStudentId.put(studentID, cl);
+    }
+    
+    public void deleteClientHandlerById(String studentID){
+        clientHandlerByStudentId.remove(studentID);
     }
 
     // This method is called by the serverGui when the employee accepts or denies the clients with studentID order

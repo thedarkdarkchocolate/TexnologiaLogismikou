@@ -225,7 +225,7 @@ public class serverGui extends JFrame{
             orderPanel.add(dishLabel, gbc);
         }
         
-        JLabel priceLabel = new JLabel("Total Price: " + order.getOrderTotalPrice() + "€");
+        JLabel priceLabel = new JLabel("Total Price: " + String.valueOf(order.getOrderTotalPrice()) + "€");
         gbc.gridy += 1;
         orderPanel.add(priceLabel, gbc);
         
@@ -244,14 +244,14 @@ public class serverGui extends JFrame{
                 buttonsPanel.add(tmpA);
                 buttonsPanel.add(tmpD);
 
-                orderPanel.add(buttonsPanel);
-
+                
                 this.confirmationListButtons.put(tmpA, orderPanel);
                 this.confirmationListButtons.put(tmpD, orderPanel);
-
+                
                 tmpA.addActionListener(new confirmationListButtons());
                 tmpD.addActionListener(new confirmationListButtons());
-
+                
+                orderPanel.add(buttonsPanel);
 
                 break;
 

@@ -120,6 +120,7 @@ public class Order implements Serializable{
         System.out.println(this.studentId);
         System.out.println(this.orderID);
         System.out.println(this.free_meal_provision);
+        System.out.println(this.dishes);
 
     }
 

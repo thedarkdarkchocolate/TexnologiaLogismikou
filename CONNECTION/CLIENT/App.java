@@ -51,7 +51,7 @@ public class App {
         if(profile != null && menu != null){
 
             profile.printProfileInfo();
-            menu.printWholeDayMenu();
+            // menu.printWholeDayMenu();
             this.mainFrame = new mainGui(menu, profile, this);
         }
 

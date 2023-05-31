@@ -148,7 +148,7 @@ public class Client{
         try {
             
             objOut.writeObject(orderPacket);
-            objOut.flush();
+            objOut.reset();
 
             ServerAnswerPacket srvAnswer;
             srvAnswer = (ServerAnswerPacket)objIn.readObject();

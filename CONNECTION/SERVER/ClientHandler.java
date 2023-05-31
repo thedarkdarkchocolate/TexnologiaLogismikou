@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -65,7 +64,7 @@ public class ClientHandler implements Runnable{
             }
             
         } catch (ClassNotFoundException | IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
             System.out.println("SERVER: Client Disconnected");            
         }
         
@@ -126,6 +125,7 @@ public class ClientHandler implements Runnable{
     }
 
     private void orderHandler(OrderPacket orderPacket){
+        orderPacket.getPacketData().printOrderInfo();
         this.server.insertOrder(orderPacket.getPacketData());
     }
 
@@ -256,6 +256,7 @@ public class ClientHandler implements Runnable{
 
     public void removeClientHandler(){
         clientHandlers.remove(this);
+        this.server.deleteClientHandlerById(this.clientProfile.getStudentId());
     }   
     
     
