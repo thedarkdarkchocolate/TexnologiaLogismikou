@@ -58,25 +58,6 @@ public class serverGui extends JFrame{
     private AudioInputStream audioStream;
     private Clip clip;
 
-    
-    
-    // Main for testing
-    public static void main(String[] args) {
-        // Run the GUI on the Event Dispatch Thread (EDT)
-        SwingUtilities.invokeLater(serverGui::new);
-    }
-
-    // Constructor for testing with main
-    public serverGui(){
-        
-        this.startServerGui();
-        ArrayList<Dish> d = new ArrayList<>();
-        // for(int i = 0; i < 10; i++)
-        d.add(new Dish("fasolakia", 3, 2, "MAIN_DISH"));
-
-        this.insertIncomingOrder(new Order("dai19159", false, false, d));
-    }
-
 
     // Constructor called by server
     public serverGui(Server server){
@@ -88,7 +69,8 @@ public class serverGui extends JFrame{
             clip = AudioSystem.getClip();
             clip.open(audioStream);
             this.playSound();
-
+            
+            
         } catch (UnsupportedAudioFileException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -97,10 +79,7 @@ public class serverGui extends JFrame{
             e.printStackTrace();
         }
 
-
-
         this.startServerGui();
-        
         
     }
 
@@ -281,8 +260,6 @@ public class serverGui extends JFrame{
         panel.add(orderPanel);
     }
 
-    // Order should be added to the waitingConfirmationOrders dict and TODO: add order to the UI list waiting for requests
-    // add new button to confirmationListButton
     public void insertIncomingOrder(Order order){
 
         int panelCode = 1;
@@ -297,7 +274,7 @@ public class serverGui extends JFrame{
     }
 
     void playSound() {
-        clip.start();
+        this.clip.start();
     }
 
     public class confirmationListButtons implements ActionListener{
@@ -313,9 +290,6 @@ public class serverGui extends JFrame{
             Order tmpOrder = confirmationListButtons.get(e.getSource()).getOrder();
 
             if(accepted){
-                
-
-                // TODO: Send client confirmation resault
 
                 // Removing JPanel from frame
                 confirmedListPanel.remove(confirmationListButtons.get(e.getSource()));
@@ -324,18 +298,13 @@ public class serverGui extends JFrame{
 
                 addOrderToPanel(tmpOrder, onGoingListPanel, panelCode);
 
-                // TODO: change status of order to on-Going
-
             }else{
 
-                // TODO: Send client confirmation resault
-                
                 // Removing JPanel from frame
                 confirmedListPanel.remove(confirmationListButtons.get(e.getSource()));
                 // Removing JButton and JPanel from dict
                 confirmationListButtons.remove(e.getSource());
 
-                // TODO: change status of order to Declined
             }
 
             // Send Update To client

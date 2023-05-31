@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -32,6 +33,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 
@@ -84,7 +86,7 @@ public class mainGui extends JFrame {
         
         this.setTitle("Bite-Byte-UoM");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setSize(800, 600);
+        this.setSize(1000, 700);
         this.setVisible(true);
 
         // this.setLocationRelativeTo(true);
@@ -178,10 +180,11 @@ public class mainGui extends JFrame {
         JPanel centralP = new JPanel();
         JPanel bottomP = new JPanel();
         JLabel basketLabel = new JLabel("Kalathi");
-        JLabel infoLabel = new JLabel("Info:");
+        JLabel infoLabel = new JLabel("StudentID: " + this.profile.getStudentId() + (this.profile.getFree_meal_provision() ? "\n, Has Free Meal Provision, " : "\n, Doesn't Free Meal Provision, ")
+                                         + "Email: " + this.profile.getEmail());
         JButton submitButton = new JButton("Submit");
-        JLabel totalLabel = new JLabel("total");
-        JLabel Dishes = new JLabel("Dishes");
+        JLabel totalLabel = new JLabel("Total");
+        JLabel Dishes = new JLabel("Dishes:");
         JPanel radioPanel = new JPanel((new FlowLayout(FlowLayout.LEFT, 2, 2)));
         // headerP.setPreferredSize(new Dimension(this.basketPanel.getWidth(), 10));
         // this.basketPanel.add(basketDishes, BorderLayout.CENTER);
@@ -200,6 +203,7 @@ public class mainGui extends JFrame {
         centralP.setBackground(Color.GRAY);
         centralP.setLayout(new BorderLayout());
         centralP.add(Dishes, BorderLayout.NORTH);
+        new JScrollPane(basketDishes);
         basketDishes.setLayout(new BoxLayout(basketDishes, BoxLayout.Y_AXIS));
         basketDishes.setBackground(Color.PINK);
         centralP.add(basketDishes, BorderLayout.CENTER);
@@ -221,10 +225,10 @@ public class mainGui extends JFrame {
 
     private void addDishToBacket(Dish dish){
 
-        // JPanel panelToAdd = new JPanel();
+        JPanel panelToAdd = new JPanel();
 
-        // GridBagLayout gbl = new GridBagLayout();
-        // panelToAdd.setLayout(gbl);
+        GridBagLayout gbl = new GridBagLayout();
+        panelToAdd.setLayout(gbl);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridwidth = 0;
         gbc.gridx = 1;
@@ -233,6 +237,7 @@ public class mainGui extends JFrame {
 
         DishPanel dishPanel = new DishPanel(dish);
         dishPanel.setLayout(new GridBagLayout());
+        // dishPanel.setLayout(new BorderLayout());
 
         dishPanel.setBackground(Color.CYAN);
         
@@ -240,7 +245,7 @@ public class mainGui extends JFrame {
         dishPanel.add(new JLabel("Price: " + String.valueOf(dish.price()) + "€"));
         
         JButton minusButton = new JButton("-");
-        minusButton.addActionListener(new AddButtonListener());
+        minusButton.addActionListener(new MinusButtonListener());
         dishPanel.add(minusButton);
         
         this.basketButtonsToPanel.put(minusButton, dishPanel);
@@ -265,12 +270,12 @@ public class mainGui extends JFrame {
             DishPanel dishPanel = new DishPanel(dish);
 
 
-            dishPanel.add(new JLabel(dish.name() + "               "));
-            dishPanel.add(new JLabel("Price: " + String.valueOf(dish.price()) + "€"));
+            dishPanel.add(new JLabel(dish.name() + "               "), BorderLayout.NORTH);
+            dishPanel.add(new JLabel("Price: " + String.valueOf(dish.price()) + "€"), BorderLayout.SOUTH);
 
             JButton addButton = new JButton("+");
             addButton.addActionListener(new AddButtonListener());
-            dishPanel.add(addButton);
+            dishPanel.add(addButton, BorderLayout.WEST);
             
             this.menuButtonsToPanel.put(addButton, dishPanel);
 
@@ -317,6 +322,37 @@ public class mainGui extends JFrame {
 
     }
 
+    public class MinusButtonListener implements ActionListener{
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+
+            DishPanel tmpDishP = basketButtonsToPanel.get(e.getSource());
+
+            // if(tmpDishP.getDish().quantity() == 1){
+            //     dishesForOrder.put(tmpDish.name(), tmpDish);
+            //     addDishToBacket(tmpDish);
+            // }
+            // else {
+
+            //     Dish dishToAdd = new Dish(tmpDish.name(), tmpDish.price(),
+            //                                 tmpDish.quantity() + dishesForOrder.get(tmpDish.name()).quantity(),
+            //                                 tmpDish.dishCatagory());
+
+            //     dishesForOrder.put(tmpDish.name(), dishToAdd);
+
+            //     for(Component dishPanel: basketDishes.getComponents())
+            //         if(dishToAdd.name().equals(((DishPanel)dishPanel).getName()))
+            //             basketDishes.remove((DishPanel)dishPanel);       
+
+            //     addDishToBacket(dishToAdd);
+            // }
+            
+            SwingUtilities.updateComponentTreeUI(contentPane);
+        }
+
+    }
+
 
     public class SubmitButton implements ActionListener {
 
@@ -326,21 +362,36 @@ public class mainGui extends JFrame {
 
             // Get order from basket Panel and send it to the app 
             // Before sending start in a new thread the loading animation
-            System.out.println(dishesForOrder);
-            ArrayList<Dish> dishes = new ArrayList<>();
+            
 
+            
+            ArrayList<Dish> dishes = new ArrayList<>();
+            
             // Inserting dishes for order in ArrayList
             for(Dish dish: dishesForOrder.values())
                 if (dish == null) 
                     continue;
                 else
                     dishes.add(dish);
-                
-                
-            app.sendOrder(new Order(profile.getStudentId(), profile.getFree_meal_provision(), true, dishes));
-
-            dishesForOrder.clear();
             
+            if(!dishes.isEmpty()){
+
+                // Removing dishPanels from basket
+                for(Component dishPanel: basketDishes.getComponents())
+                    basketDishes.remove((DishPanel)dishPanel);  
+                    
+                    
+                app.sendOrder(new Order(profile.getStudentId(), profile.getFree_meal_provision(), true, dishes));
+
+                dishesForOrder.clear();
+
+            }
+            else
+                System.out.println("Select an item to be able to submit you order ! ");
+
+
+            SwingUtilities.updateComponentTreeUI(contentPane);
+
         }
 
 
