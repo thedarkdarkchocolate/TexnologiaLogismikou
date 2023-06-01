@@ -198,12 +198,16 @@ public class mainGui extends JFrame {
         headerP.setLayout(new BorderLayout());
         headerP.add(basketLabel, BorderLayout.CENTER);
         headerP.add(infoLabel, BorderLayout.SOUTH);
+
         radioPanel.setPreferredSize(new Dimension(100, 40));
-        buttonsGroup = new ButtonGroup();
+        this.buttonsGroup = new ButtonGroup();
+
         JRadioButton takeAway = new JRadioButton("Take-away");
         takeAway.setActionCommand("Take-Away");
+        
         JRadioButton dineIn = new JRadioButton("Dine-In");
         dineIn.setActionCommand("Dine-In");
+
         buttonsGroup.add(takeAway);
         buttonsGroup.add(dineIn);
         radioPanel.add(takeAway);
