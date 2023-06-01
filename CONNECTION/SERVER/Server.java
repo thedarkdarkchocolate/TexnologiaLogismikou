@@ -180,8 +180,8 @@ public class Server{
     // This method is called by the serverGui when the employee accepts or denies the clients with studentID order
     public void sendOrderStatusUpdateToClient(String studentID, boolean accepted){
         System.out.println("ORDER_ID: " + studentID + ", CONFIRAMTION_STATUS: " + accepted);
-        clientHandlerByStudentId.get(studentID).sendOrderConfirmationStatus(accepted);
-        // this.dbHandler.insertOrder(order, accepted ? "ACCEPTED" : "DECLINED");
+        if(clientHandlerByStudentId.containsKey(studentID))
+            clientHandlerByStudentId.get(studentID).sendOrderConfirmationStatus(accepted);
     }
 
     public void updateOrderStatus(String orderID, String status){

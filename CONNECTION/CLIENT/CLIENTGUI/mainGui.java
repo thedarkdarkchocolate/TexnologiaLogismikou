@@ -28,6 +28,7 @@ import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -387,17 +388,17 @@ public class mainGui extends JFrame {
                 for(Component dishPanel: basketDishes.getComponents())
                     basketDishes.remove((DishPanel)dishPanel);  
                     
-                    
-                app.sendOrder(new Order(profile.getStudentId(), profile.getFree_meal_provision(), true, dishes));
+                JOptionPane.showMessageDialog(contentPane, app.sendOrder(new Order(profile.getStudentId(), profile.getFree_meal_provision(), true, dishes)) ? "Order Accepted ! Your order should be ready in a bit. " : "Your order has been declined. ");
+                SwingUtilities.updateComponentTreeUI(contentPane);
 
                 dishesForOrder.clear();
 
             }
             else
-                System.out.println("Select an item to be able to submit you order ! ");
+                JOptionPane.showMessageDialog(contentPane, "Select an item to be able to submit you order ! ");
+                // System.out.println("Select an item to be able to submit you order ! ");
 
 
-            SwingUtilities.updateComponentTreeUI(contentPane);
 
         }
 

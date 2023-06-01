@@ -157,6 +157,7 @@ public class ClientHandler implements Runnable{
     // This method is called only by the Server when there is an update on the clients order confirmation
     // (When the employee Accepts or Denies the Order then it sends to the client the outcome)
     public void sendOrderConfirmationStatus(boolean accepted){
+        
         ServerAnswerPacket serverAnswer = new ServerAnswerPacket(accepted);
         try {
             objOut.writeObject(serverAnswer);

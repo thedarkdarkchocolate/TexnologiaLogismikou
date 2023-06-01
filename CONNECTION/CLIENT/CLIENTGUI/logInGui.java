@@ -1,5 +1,6 @@
 package CONNECTION.CLIENT.CLIENTGUI;
 
+import java.awt.BorderLayout;
 // import java.awt.Color;
 // import java.awt.Container;
 // import java.awt.GridBagConstraints;
@@ -31,9 +32,9 @@ public class logInGui extends JFrame {
 
     private void startGui() {
 
-        setSize(800, 600);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(800, 600);
+        this.setLocationRelativeTo(null);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
         BtnListener btnL = new BtnListener();
 
