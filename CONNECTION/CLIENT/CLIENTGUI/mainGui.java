@@ -21,6 +21,7 @@ import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -57,6 +58,7 @@ public class mainGui extends JFrame {
     private JPanel basketPanel;
     private JPanel basketDishes;
     private JLabel totalPrice;
+    private ButtonGroup buttonsGroup;
 
     private App app;
     private Profile profile;
@@ -197,8 +199,15 @@ public class mainGui extends JFrame {
         headerP.add(basketLabel, BorderLayout.CENTER);
         headerP.add(infoLabel, BorderLayout.SOUTH);
         radioPanel.setPreferredSize(new Dimension(100, 40));
-        radioPanel.add(new JRadioButton("A) Dine-in"));
-        radioPanel.add(new JRadioButton("B) Take-away"));
+        buttonsGroup = new ButtonGroup();
+        JRadioButton takeAway = new JRadioButton("Take-away");
+        takeAway.setActionCommand("Take-Away");
+        JRadioButton dineIn = new JRadioButton("Dine-In");
+        dineIn.setActionCommand("Dine-In");
+        buttonsGroup.add(takeAway);
+        buttonsGroup.add(dineIn);
+        radioPanel.add(takeAway);
+        radioPanel.add(dineIn);
         headerP.add(radioPanel, FlowLayout.RIGHT);
 
         // central template
@@ -384,18 +393,23 @@ public class mainGui extends JFrame {
             
             if(!dishes.isEmpty()){
 
-                // Removing dishPanels from basket
-                for(Component dishPanel: basketDishes.getComponents())
-                    basketDishes.remove((DishPanel)dishPanel);  
-                    
-                JOptionPane.showMessageDialog(contentPane, app.sendOrder(new Order(profile.getStudentId(), profile.getFree_meal_provision(), true, dishes)) ? "Order Accepted ! Your order should be ready in a bit. " : "Your order has been declined. ");
-                SwingUtilities.updateComponentTreeUI(contentPane);
+                if(!(buttonsGroup.getSelection() == null)){
+                    // Removing dishPanels from basket
+                    for(Component dishPanel: basketDishes.getComponents())
+                        basketDishes.remove((DishPanel)dishPanel);  
+                        
+                    JOptionPane.showMessageDialog(contentPane, app.sendOrder(new Order(profile.getStudentId(), profile.getFree_meal_provision(),
+                                                    (buttonsGroup.getSelection()).getActionCommand().equals("Take-Away") ? true : false, dishes)) ? "Order Accepted ! Your order should be ready in a bit. " : "Your order has been declined. ");
 
-                dishesForOrder.clear();
+                    SwingUtilities.updateComponentTreeUI(contentPane);
 
+                    dishesForOrder.clear();
+                }
+                else
+                    JOptionPane.showMessageDialog(contentPane, "Select TakeAway or Dine-In to be able to complete your order ! ");
             }
             else
-                JOptionPane.showMessageDialog(contentPane, "Select an item to be able to submit you order ! ");
+                JOptionPane.showMessageDialog(contentPane, "Select an item to be able to submit your order ! ");
                 // System.out.println("Select an item to be able to submit you order ! ");
 
 
