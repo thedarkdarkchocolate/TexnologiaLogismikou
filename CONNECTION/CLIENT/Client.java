@@ -5,9 +5,15 @@ import USER.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class Client{
     
@@ -16,27 +22,97 @@ public class Client{
     private ObjectInputStream objIn;
     private String client_Student_Number;
     private App app;
+    private boolean tryAgain;
 
 
-    public Client() throws IOException, ClassNotFoundException, InterruptedException, UnknownHostException{
+    public Client() {
 
-        clSocket = new Socket("localhost", 5000);
-        objOut = new ObjectOutputStream(clSocket.getOutputStream());
-        objIn = new ObjectInputStream(clSocket.getInputStream());
-        client_Student_Number = "";
+        this.tryAgain = true;
 
-        this.app = new App(this);
-
-        Scanner s = new Scanner(System.in);
-        while(true)
-            if (s.nextLine().equals("EXIT")){
-                //  TODO : close app!!
-                break;
-            }
+        try {
             
+            while(this.tryAgain)
+                startClient();
 
-        s.close();
-        this.closeEveryThing();
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+    }
+
+    public void startClient() throws IOException, ClassNotFoundException, InterruptedException, UnknownHostException{
+
+        String serverIp;
+
+        try {
+
+            DatagramSocket datagramSocket = new DatagramSocket();
+            datagramSocket.setBroadcast(true);
+
+            String message = "Client broadcast";
+            byte[] buffer = message.getBytes();
+
+            InetAddress broadcastAddress = InetAddress.getByName("255.255.255.255"); // Broadcast address
+
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+            packet.setAddress(broadcastAddress);
+            packet.setPort(5000);
+
+            // Send broadcast message to server
+            datagramSocket.send(packet);
+            System.out.println("Sent broadcast: " + message);
+
+            // Receive server response
+            byte[] responseBuffer = new byte[1024];
+            DatagramPacket responsePacket = new DatagramPacket(responseBuffer, responseBuffer.length);
+            datagramSocket.setSoTimeout(2000);  // if the server doesn't respond then it throws a timeOut exception
+            datagramSocket.receive(responsePacket);
+            String response = new String(responsePacket.getData(), 0, responsePacket.getLength());
+            System.out.println("Received response from server: " + response);
+
+            serverIp = response;
+
+            datagramSocket.close();
+            
+        } catch (IOException e) {
+            serverIp = "";
+            // e.printStackTrace();
+        }
+
+
+        
+
+        try{
+
+            clSocket = new Socket(serverIp, 5000);
+            objOut = new ObjectOutputStream(clSocket.getOutputStream());
+            objIn = new ObjectInputStream(clSocket.getInputStream());
+            client_Student_Number = "";
+
+            this.app = new App(this);
+
+            Scanner s = new Scanner(System.in);
+            while(true)
+                if (s.nextLine().equals("EXIT")){
+                    //  TODO : close app!!
+                    break;
+                }
+                
+            this.tryAgain = false;
+            s.close();
+            this.closeEveryThing();
+        }
+        catch(Exception e){
+
+            JFrame jf = new JFrame();
+
+            int msg = JOptionPane.showOptionDialog(jf, "Couldn't connect to the server.", "Failed to connect", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"Try Again", "Cancel"}, null);
+            this.tryAgain = msg == 0 ? true : false;
+
+            jf.dispose();
+            
+        }
+
     }
 
     //0: credentials don't match a user, 1: success user logged in, 2: Unkown Error
