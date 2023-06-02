@@ -53,10 +53,6 @@ public class mainGui extends JFrame {
     private App app;
     private Profile profile;
 
-    public static void  main(String args[]){
-        SwingUtilities.invokeLater(mainGui::new);
-    }
-
 
     public mainGui(Menu menu, Profile profile, App app){
 
@@ -70,11 +66,6 @@ public class mainGui extends JFrame {
         
         
     }
-
-    public mainGui(){
-        startMenuGui();
-    }
-    
     
     private void startMenuGui() {
         

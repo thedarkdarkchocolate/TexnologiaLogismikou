@@ -1,14 +1,8 @@
 package CONNECTION.CLIENT.CLIENTGUI;
 
-import java.awt.BorderLayout;
-// import java.awt.Color;
-// import java.awt.Container;
-// import java.awt.GridBagConstraints;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-// import java.awt.Insets;
 import javax.swing.*;
 
 import CONNECTION.CLIENT.App;

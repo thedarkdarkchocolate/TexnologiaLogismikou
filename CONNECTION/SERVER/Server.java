@@ -9,14 +9,12 @@ import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketImpl;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -39,20 +37,6 @@ public class Server{
 
     private final int serverPort;
     DatagramSocket datagramSocket;
-
-    // public static void main(String args[]){
-
-    //     new Server("");
-        
-    // }
-
-    
-    //TEMPORARY CONSTACTOR
-    // public Server(String k){
-    //     int day = 1;
-    //     menuReader(Integer.toString(day));
-    //     this.menu.printMenuByTimeOfService(2);
-    // }
 
 
 
@@ -330,7 +314,6 @@ public class Server{
         public void run() {
             
             Scanner scanner = new Scanner(System.in);
-            String command = "";
 
             while(true){
                 if (scanner.nextLine().equals("EXIT")){
@@ -344,6 +327,8 @@ public class Server{
 
             }
             
+            scanner.close();
+
             // Terminating clientHandler, their threads and closing serverSocket 
             System.out.println("Closing...");
             
@@ -360,9 +345,9 @@ public class Server{
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
         while (interfaces.hasMoreElements()) {
             NetworkInterface networkInterface = interfaces.nextElement();
-            if (networkInterface.isLoopback() || !networkInterface.isUp()) {
-                continue;
-            }
+            // if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+            //     continue;
+            // }
 
             Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
             while (addresses.hasMoreElements()) {

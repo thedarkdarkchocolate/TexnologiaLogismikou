@@ -110,7 +110,7 @@ public class Client{
             this.tryAgain = msg == 0 ? true : false;
 
             jf.dispose();
-            
+            e.printStackTrace();
         }
 
     }
