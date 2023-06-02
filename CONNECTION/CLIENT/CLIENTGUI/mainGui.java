@@ -9,7 +9,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
@@ -17,30 +16,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
-
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
-import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
-import javax.swing.border.MatteBorder;
-
 import CONNECTION.CLIENT.*;
-import CONNECTION.SERVER.SERVERGUI.serverGui.OrderJPanel;
 
 public class mainGui extends JFrame {
 
@@ -401,7 +391,7 @@ public class mainGui extends JFrame {
                     // Removing dishPanels from basket
                     for(Component dishPanel: basketDishes.getComponents())
                         basketDishes.remove((DishPanel)dishPanel);  
-                        
+                    
                     JOptionPane.showMessageDialog(contentPane, app.sendOrder(new Order(profile.getStudentId(), profile.getFree_meal_provision(),
                                                     (buttonsGroup.getSelection()).getActionCommand().equals("Take-Away") ? true : false, dishes)) ? "Order Accepted ! Your order should be ready in a bit. " : "Your order has been declined. ");
 
@@ -414,7 +404,6 @@ public class mainGui extends JFrame {
             }
             else
                 JOptionPane.showMessageDialog(contentPane, "Select an item to be able to submit your order ! ");
-                // System.out.println("Select an item to be able to submit you order ! ");
 
 
 

@@ -22,6 +22,7 @@ public class ClientHandler implements Runnable{
     private Server server;
     private Thread clientHandlerThread;
     private Boolean isSignedIn;
+
     private Profile clientProfile;
 
     
@@ -255,9 +256,14 @@ public class ClientHandler implements Runnable{
         return server.checkIfUsernameExists(userSignUpPacket.getPacketData().get("username"));
     }
 
+    public Profile getProfile(){
+        return this.clientProfile;
+    }
+
     public void removeClientHandler(){
         clientHandlers.remove(this);
-        this.server.deleteClientHandlerById(this.clientProfile.getStudentId());
+        if(!this.clientProfile.getStudentId().isEmpty())
+            this.server.deleteClientHandlerById(this.clientProfile.getStudentId());
     }   
     
     
