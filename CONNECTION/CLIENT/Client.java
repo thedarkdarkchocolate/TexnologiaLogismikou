@@ -5,6 +5,7 @@ import USER.*;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.ConnectException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -23,7 +24,7 @@ public class Client{
     private String client_Student_Number;
     private App app;
     private boolean tryAgain;
-
+    
 
     public Client() {
 
@@ -37,7 +38,7 @@ public class Client{
         } catch (Exception e) {
             // TODO: handle exception
         }
-
+        
     }
 
     public void startClient() throws IOException, ClassNotFoundException, InterruptedException, UnknownHostException{
@@ -106,15 +107,15 @@ public class Client{
             s.close();
             this.closeEveryThing();
         }
-        catch(Exception e){
+        catch(ConnectException | UnknownHostException e){
 
+            // e.printStackTrace();
             JFrame jf = new JFrame();
 
-            int msg = JOptionPane.showOptionDialog(jf, "Couldn't connect to the server.", "Failed to connect", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"Try Again", "Cancel"}, null);
+            int msg = JOptionPane.showOptionDialog(jf, "Couldn't connect to the server !", "Failed to connect", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, new String[]{"Try Again", "Cancel"}, null);
             this.tryAgain = msg == 0 ? true : false;
-
+            
             jf.dispose();
-            // e.printStackTrace();
         }
 
     }
