@@ -2,20 +2,22 @@ BREAKFAST
 --------------
 --
 MAIN_DISH
-fasolakia
+Fasolakia
+Patates Gixni
+Spanakoruzo
 --
 GARNISH
-feta
+Turi Feta
 --
 SALAD
-xwriatikh
+Xwriatikh
 --
 DESERT
-mhlo
-axladi
+Mhlo
+Axladi
 --
 SPECIAL_MENU
-makronia
+Makronia
 --
 --------------
 BREAKFAST
