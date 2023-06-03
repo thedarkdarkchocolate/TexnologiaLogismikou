@@ -1,12 +1,10 @@
 package CONNECTION.SERVER;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -30,28 +28,6 @@ public class DatabaseHandler {
     private static ReentrantLock insertOrderLock = new ReentrantLock(true);
     private static ReentrantLock updateOrderStatus = new ReentrantLock(true);
 
-    //  main used for easier testing 
-    public static void main(String args[]) throws SQLException, ClassNotFoundException, IOException{
-
-        DatabaseHandler db = new DatabaseHandler();
-
-        ArrayList<Dish> d = new ArrayList<>();
-
-        d.add(new Dish("fasolakia", 3, 2, "MAIN_DISH"));
-
-        db.insertOrder(new Order("dai19159", false, false, d), "DECLINED");
-        db.insertOrder(new Order("dai19159", true, false, d), "DECLINED");
-        
-        for(Order order: db.getOrderByID("dai19159")){
-            order.printOrderInfo();
-            System.out.println("--------------");
-        }
-        
-        db.closeDB();
-
-        System.out.println();
-
-    }
 
     public DatabaseHandler() throws SQLException{
 

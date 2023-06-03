@@ -6,7 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Scanner;
 
 import PACKETS.*;
 import USER.Profile;
@@ -22,6 +21,7 @@ public class ClientHandler implements Runnable{
     private Server server;
     private Thread clientHandlerThread;
     private Boolean isSignedIn;
+
     private Profile clientProfile;
 
     
@@ -157,10 +157,11 @@ public class ClientHandler implements Runnable{
     // This method is called only by the Server when there is an update on the clients order confirmation
     // (When the employee Accepts or Denies the Order then it sends to the client the outcome)
     public void sendOrderConfirmationStatus(boolean accepted){
+        
         ServerAnswerPacket serverAnswer = new ServerAnswerPacket(accepted);
         try {
             objOut.writeObject(serverAnswer);
-            objOut.flush();
+            objOut.reset();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -254,9 +255,14 @@ public class ClientHandler implements Runnable{
         return server.checkIfUsernameExists(userSignUpPacket.getPacketData().get("username"));
     }
 
+    public Profile getProfile(){
+        return this.clientProfile;
+    }
+
     public void removeClientHandler(){
         clientHandlers.remove(this);
-        this.server.deleteClientHandlerById(this.clientProfile.getStudentId());
+        if(!this.clientProfile.getStudentId().isEmpty())
+            this.server.deleteClientHandlerById(this.clientProfile.getStudentId());
     }   
     
     

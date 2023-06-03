@@ -3,14 +3,18 @@ package CONNECTION.SERVER;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -27,22 +31,12 @@ public class Server{
     private final static Lock incomingOrderLock = new ReentrantLock();
     private DatabaseHandler dbHandler;
     private Thread serverCommandThread;
+    private Thread serverBroadcastListenerThread;
     private Menu menu;
     private serverGui serverGui;
 
-    // public static void main(String args[]){
-
-    //     new Server("");
-        
-    // }
-
-    
-    //TEMPORARY CONSTACTOR
-    // public Server(String k){
-    //     int day = 1;
-    //     menuReader(Integer.toString(day));
-    //     this.menu.printMenuByTimeOfService(2);
-    // }
+    private final int serverPort;
+    DatagramSocket datagramSocket;
 
 
 
@@ -54,6 +48,8 @@ public class Server{
         } catch (SQLException e) {
             // TODO: handle exception
         }
+
+        this.serverPort = 5000;
         
 
         // TODO: Create Menu Not final place just for testing(we need live menu)
@@ -63,9 +59,14 @@ public class Server{
         //SERVER GUI STARTING...
         serverGui = new serverGui(this);
 
-        this.serverSocket = new ServerSocket(5000);                // Creating server socket
+        this.serverSocket = new ServerSocket(this.serverPort);                // Creating server socket
+
         serverCommandThread = new Thread(new ServerCommandHandler());   // New Thread to wait for commands while the server is running
         serverCommandThread.start(); 
+
+        serverBroadcastListenerThread = new Thread(new ServerBroadcastListener());
+        serverBroadcastListenerThread.start();
+
         this.startServer();
 
 
@@ -180,8 +181,8 @@ public class Server{
     // This method is called by the serverGui when the employee accepts or denies the clients with studentID order
     public void sendOrderStatusUpdateToClient(String studentID, boolean accepted){
         System.out.println("ORDER_ID: " + studentID + ", CONFIRAMTION_STATUS: " + accepted);
-        clientHandlerByStudentId.get(studentID).sendOrderConfirmationStatus(accepted);
-        // this.dbHandler.insertOrder(order, accepted ? "ACCEPTED" : "DECLINED");
+        if(clientHandlerByStudentId.containsKey(studentID))
+            clientHandlerByStudentId.get(studentID).sendOrderConfirmationStatus(accepted);
     }
 
     public void updateOrderStatus(String orderID, String status){
@@ -288,11 +289,16 @@ public class Server{
         this.serverGui.close();
     }
 
+    private void closeDatagramSocket(){
+        this.datagramSocket.close();
+    }
+
     public void closeServer(){
 
         closeServerGui();
         closeClientHandlers();
         closeServerSocket();
+        closeDatagramSocket();
         closeDatabaseHandler();
         
         
@@ -308,16 +314,21 @@ public class Server{
         public void run() {
             
             Scanner scanner = new Scanner(System.in);
-            String command = "";
 
             while(true){
                 if (scanner.nextLine().equals("EXIT")){
-                    //  TODO : close app!!
                     break;
+                }
+                else if(scanner.nextLine().equals("USERS")){
+                    for(ClientHandler cl: clientHandlerByStudentId.values())
+                        // System.out.println();
+                        cl.getProfile().printProfileInfo();
                 }
 
             }
             
+            scanner.close();
+
             // Terminating clientHandler, their threads and closing serverSocket 
             System.out.println("Closing...");
             
@@ -327,6 +338,72 @@ public class Server{
 
 
         
+    }
+
+
+    private static String getServerIP(DatagramSocket socket) throws IOException {
+        Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
+        while (interfaces.hasMoreElements()) {
+            NetworkInterface networkInterface = interfaces.nextElement();
+            // if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+            //     continue;
+            // }
+
+            Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
+            while (addresses.hasMoreElements()) {
+                InetAddress address = addresses.nextElement();
+                if (address.isSiteLocalAddress()) {
+                    return address.getHostAddress();
+                }
+            }
+        }
+        return "localhost";
+    }
+
+    public class ServerBroadcastListener implements Runnable{
+
+        @Override
+        public void run() {
+            
+            try {
+
+                datagramSocket = new DatagramSocket(serverPort);
+                byte[] buffer = new byte[1024];
+                DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+
+                while (!serverSocket.isClosed()) {
+
+                    datagramSocket.receive(packet);
+                    String message = new String(packet.getData(), 0, packet.getLength());
+                    System.out.println("Received broadcast: " + message);
+
+                    // Extract client's IP and port
+                    InetAddress clientAddress = packet.getAddress();
+                    int clientPort = packet.getPort();
+
+                    // Prepare server response
+                    String response = Server.getServerIP(datagramSocket);// + ":" + serverPort;
+                    byte[] responseData = response.getBytes();
+                    DatagramPacket responsePacket = new DatagramPacket(responseData, responseData.length,
+                            clientAddress, clientPort);
+
+                    // Send response to client
+
+                    datagramSocket.send(responsePacket);
+                    System.out.println("Sent response to client: " + response);
+
+                }
+
+                
+            } catch (IOException e) {
+                e.printStackTrace();
+            }     
+            
+            
+
+        }
+
+
     }
 
    
