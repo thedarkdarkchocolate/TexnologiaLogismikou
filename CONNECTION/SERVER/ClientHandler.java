@@ -261,7 +261,7 @@ public class ClientHandler implements Runnable{
 
     public void removeClientHandler(){
         clientHandlers.remove(this);
-        if(!this.clientProfile.getStudentId().isEmpty())
+        if(!(this.clientProfile == null))
             this.server.deleteClientHandlerById(this.clientProfile.getStudentId());
     }   
     

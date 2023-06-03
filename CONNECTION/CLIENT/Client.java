@@ -44,6 +44,10 @@ public class Client{
 
         String serverIp;
 
+        // This block of code is responsible to broadcast a message in the network so when the server listens to it it will send back 
+        // the server ip address so a connection can be made accross a local network. If the server doesn't have a connection to a network 
+        // it will send back "localhost" so the client running from the same machine can achive a connection 
+
         try {
 
             DatagramSocket datagramSocket = new DatagramSocket();

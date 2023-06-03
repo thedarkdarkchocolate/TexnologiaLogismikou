@@ -304,9 +304,6 @@ public class Server{
         
     }
 
-    
-
-
 
     public class ServerCommandHandler implements Runnable{
 
@@ -321,7 +318,6 @@ public class Server{
                 }
                 else if(scanner.nextLine().equals("USERS")){
                     for(ClientHandler cl: clientHandlerByStudentId.values())
-                        // System.out.println();
                         cl.getProfile().printProfileInfo();
                 }
 
@@ -340,14 +336,14 @@ public class Server{
         
     }
 
-
+    // returning the serverIP address
     private static String getServerIP(DatagramSocket socket) throws IOException {
         Enumeration<NetworkInterface> interfaces = NetworkInterface.getNetworkInterfaces();
         while (interfaces.hasMoreElements()) {
             NetworkInterface networkInterface = interfaces.nextElement();
-            // if (networkInterface.isLoopback() || !networkInterface.isUp()) {
-            //     continue;
-            // }
+            if (networkInterface.isLoopback() || !networkInterface.isUp()) {
+                continue;
+            }
 
             Enumeration<InetAddress> addresses = networkInterface.getInetAddresses();
             while (addresses.hasMoreElements()) {
@@ -360,6 +356,9 @@ public class Server{
         return "localhost";
     }
 
+
+    // This thread is responsible for listening for a broadcast message from any client that is trying to connect 
+    // and then answers with the ip of the server 
     public class ServerBroadcastListener implements Runnable{
 
         @Override

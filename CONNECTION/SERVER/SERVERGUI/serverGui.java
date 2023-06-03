@@ -37,7 +37,6 @@ import CONNECTION.SERVER.Server;
 import USER.*;
 
 // ServerGui --> Emfanizei tis eiserxomenes parageleies 
-//               Uparxei input box gia eisagwgh tou pasou h studentId
 //               afou o perastoun ta stoixeia tou foithth theloume na emfanizetai analutika h parageleia kai to poso plhrwmhs  
 //               extra: na exoume kai sxolia parageleias 
 
@@ -264,8 +263,6 @@ public class serverGui extends JFrame{
 
         int panelCode = 1;
 
-        // Inserted Order to dict
-        // this.waitingConfirmationOrders.put(order.getOrderID(), order);
         this.playSound();
 
         this.addOrderToPanel(order, this.confirmedListPanel, panelCode);
@@ -276,6 +273,8 @@ public class serverGui extends JFrame{
     void playSound() {
         this.clip.start();
     }
+
+    
 
     public class confirmationListButtons implements ActionListener{
 
