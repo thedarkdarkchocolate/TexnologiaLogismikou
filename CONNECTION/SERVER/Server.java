@@ -107,7 +107,6 @@ public class Server{
         try {
             return dbHandler.logInAuth(studentId, pass);
         } catch (Exception e) {
-            // TODO: handle exception
             return false;
         }
     }
@@ -117,7 +116,6 @@ public class Server{
         try {
             return this.dbHandler.checkIfUserExists(studentId);
         } catch (SQLException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
             return false;
         }
@@ -130,7 +128,6 @@ public class Server{
             this.dbHandler.insertToUserProfileDataBase(new Profile(cred, checkForMealProvision(cred[0])));
             this.dbHandler.insertToLogInCredDataBase(cred[0], cred[1]);
         } catch (Exception e) {
-            // TODO: handle exception
             e.printStackTrace();
         }
     }
@@ -138,7 +135,9 @@ public class Server{
     
     private boolean checkForMealProvision(String studentId) {
         try {
-            return true; //mealProvisionDataBase.get(studentId);
+            // all signed Up student will get free meal provision
+            // we wanted to make a list of AM that will get free meal provision but didn't have much time 
+            return true; 
         } catch (Exception e) {
             return false;
         }
