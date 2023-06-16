@@ -113,7 +113,6 @@ public class mainGui extends JFrame {
         this.tabPanels = new ArrayList<>();
         mainPanel = new JPanel();
         mainPanel.setPreferredSize(new Dimension(contentPane.getWidth(), contentPane.getHeight()));
-        mainPanel.setBackground(Color.BLUE);
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 
         basketPanel = new JPanel();
