@@ -135,9 +135,8 @@ public class Server{
     
     private boolean checkForMealProvision(String studentId) {
         try {
-            // all signed Up student will get free meal provision
-            // we wanted to make a list of AM that will get free meal provision but didn't have much time 
-            return true; 
+            // Free Meal Provisions have the studentIDs that are dai 19000 - 19250 or ics 20000 - 20250, 21000 - 21250, 22000 - 22250 that are divisible by 5
+            return dbHandler.hasFreeMealProvision(studentId);
         } catch (Exception e) {
             return false;
         }

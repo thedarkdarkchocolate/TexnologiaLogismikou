@@ -164,7 +164,7 @@ public class mainGui extends JFrame {
         JPanel centralP = new JPanel();
         JPanel bottomP = new JPanel();
         JLabel basketLabel = new JLabel("Kalathi");
-        JLabel infoLabel = new JLabel("StudentID: " + this.profile.getStudentId() + (this.profile.getFree_meal_provision() ? "\n, Has Free Meal Provision, " : "\n, Doesn't Free Meal Provision, ")
+        JLabel infoLabel = new JLabel("StudentID: " + this.profile.getStudentId() + (this.profile.getFree_meal_provision() ? "\n, Has Free Meal Provision, " : "\n, No Free Meal Provision, ")
                                          + "Email: " + this.profile.getEmail());
         JButton submitButton = new JButton("Submit");
         this.totalPrice = new JLabel("Total: 0.0€");

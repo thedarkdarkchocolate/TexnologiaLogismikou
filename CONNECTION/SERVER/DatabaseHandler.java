@@ -54,6 +54,7 @@ public class DatabaseHandler {
                 put("INSERT_ORDER", connection.prepareStatement("insert into Orders values (?, ?, ?, ?)"));
                 put("GET_ORDERS_BY_ID", connection.prepareStatement("select OrderObj from Orders where studentID = ? group by OrderID"));
                 put("UPDATE_ORDER_STATUS_BY_ORDER_ID", connection.prepareStatement("update Orders set Status = ? where OrderID = ?"));
+                put("GET_FMP_ID", connection.prepareStatement("select StudentID from FreeMealProvision where StudentID = ?"));
     
             }};
 
@@ -104,6 +105,17 @@ public class DatabaseHandler {
         this.preparedStatements.get("UPDATE_ORDER_STATUS_BY_ORDER_ID").executeUpdate();
 
         updateOrderStatus.unlock();
+
+    }
+
+
+    public boolean hasFreeMealProvision(String studentID) throws SQLException{
+
+        this.preparedStatements.get("GET_FMP_ID").setString(1, studentID);
+
+        ResultSet rs = this.preparedStatements.get("GET_FMP_ID").executeQuery();
+
+        return rs.getString(1).equals(studentID);
 
     }
 
