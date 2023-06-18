@@ -232,12 +232,11 @@ public class mainGui extends JFrame {
 
         DishPanel dishPanel = new DishPanel(dish);
         dishPanel.setLayout(new GridBagLayout());
-        // dishPanel.setLayout(new BorderLayout());
 
         dishPanel.setBackground(Color.CYAN);
         
         dishPanel.add(new JLabel(dish.name() + "     x" + dish.quantity()));
-        dishPanel.add(new JLabel("Price: " + String.valueOf(dish.price()) + "€"));
+        dishPanel.add(new JLabel(", Price/Item:  " + String.valueOf(dish.price()) + "€"));
         
         JButton minusButton = new JButton("-");
         minusButton.addActionListener(new MinusButtonListener());
@@ -314,7 +313,7 @@ public class mainGui extends JFrame {
 
             Order tmpOrder = new Order(profile.getStudentId(), profile.getFree_meal_provision(), true, new ArrayList<Dish>(dishesForOrder.values()));
 
-            // TODO: Change takeAway to getButtonChoice
+            
             totalPrice.setText("Total: " + String.valueOf(tmpOrder.getOrderTotalPrice()) + "€");
             
             
@@ -385,7 +384,9 @@ public class mainGui extends JFrame {
                     JOptionPane.showMessageDialog(contentPane, app.sendOrder(new Order(profile.getStudentId(), profile.getFree_meal_provision(),
                                                     (buttonsGroup.getSelection()).getActionCommand().equals("Take-Away") ? true : false, dishes)) ? "Order Accepted ! Your order should be ready in a bit. " : "Your order has been declined. ");
 
-                    SwingUtilities.updateComponentTreeUI(contentPane);
+                    contentPane.invalidate();
+                    contentPane.validate();
+                    contentPane.repaint();
 
                     dishesForOrder.clear();
                 }

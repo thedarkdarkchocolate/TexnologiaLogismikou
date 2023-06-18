@@ -51,9 +51,10 @@ public class Order implements Serializable{
 
         if(!this.free_meal_provision){
             
-            for(Dish dish: this.dishes)
-            this.price += dish.price();
-            
+            for(Dish dish: this.dishes){
+                if(dish == null) continue;
+                this.price += dish.getTotalPrice();
+            }    
         }
         else {
 
@@ -67,7 +68,7 @@ public class Order implements Serializable{
                 if(dish == null) continue;
 
                 if(!this.boolCatagories.get(dish.dishCatagory()))
-                    this.price += dish.price();
+                    this.price += dish.getTotalPrice();
                 else
                     if(dish.dishCatagory().equals("MAIN_DISH") || dish.dishCatagory().equals("SPECIAL_MENU")){
                         this.boolCatagories.put("MAIN_DISH", false);
