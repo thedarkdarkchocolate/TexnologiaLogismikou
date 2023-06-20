@@ -8,5 +8,11 @@ Otan o xrhsths kanei logIn stelnetai apo ton server to profile(onoma, eponumo, e
 
 to menu omws panta einai to idio (prwino deuteras)
 
+Epipleon to programma exei thn dunatothta, afou trexete ton Server se enan upologisth sundedemeno sto topiko diktuo, na trexete enan h pollous clients apo diaforetikous upologistes kai tha sundethoun sto server pou trexei
+Proipothesh einai na uparxei enas kai monadikos server sto diktuo alliws o client tha sundethei se opoion server tou steilei thn ip prwtos 
+Se periptwsh pou kanete signUp se enan "apomakrismeno" server ta stoixeia tha apothikeutoun se ekeinon opote prospatheia sundeshs se kapoion allon server den tha doulepsei kathws ta stoixeia sas den tha uparxoune  
+
+
+
 
 
